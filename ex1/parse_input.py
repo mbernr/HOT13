@@ -1,5 +1,6 @@
 import sys
 import networkx as nx
+import math
 
 
 def parse(file_path):
@@ -12,15 +13,15 @@ def parse(file_path):
 
 		second_line = file.readline().strip().split(" ")
 
-		n = int(second_line[0])
-		m = int(second_line[1])
-		k = int(second_line[2])
-		L = int(second_line[3])
+		n = int(second_line[0]) # number of vertices
+		m = int(second_line[1]) # number of edges
+		k = int(second_line[2]) # number of drivers
+		L = int(second_line[3]) # desired travel distance
 
 		G = nx.Graph()
 
-		for line in file:
-			line = line.strip().split(" ")
+		for i in range(0,n):
+			line = file.readline().strip().split(" ")
 			G.add_edge(int(line[0]), int(line[1]), weight=int(line[2]))
 
 		G = add_dummy_edges(G)
@@ -31,11 +32,26 @@ def parse(file_path):
 
 		second_line = file.readline().strip().split(" ")
 
-		n = int(second_line[0])
-		k = int(second_line[1])
-		L = int(second_line[2])
+		n = int(second_line[0]) # number of vertices
+		k = int(second_line[1]) # number of drivers
+		L = int(second_line[2]) # desired travel distance
 
-		# todo: parse vertices and edges from COORDS files
+		G = nx.Graph()
+
+		for i in range(0,n):
+			line = file.readline().strip().split(" ")
+			G.add_node(i, x=int(line[0]), y=int(line[1]))
+
+		for i in range(G.number_of_nodes()):
+			xi = G.nodes[i]["x"]
+			yi = G.nodes[i]["y"]
+			for j in range(i+1, G.number_of_nodes()):
+				xj = G.nodes[j]["x"]
+				yj = G.nodes[j]["y"]
+				distance = custom_round(euclidean_distance(xi,yi,xj,yj))
+				G.add_edge(i, j, weight=distance)
+
+		return G
 
 	else:
 
@@ -45,7 +61,7 @@ def parse(file_path):
 
 def add_dummy_edges(G):
 	M = big_M(G)
-	for i in range (G.number_of_nodes()):
+	for i in range(G.number_of_nodes()):
 		for j in range(i+1, G.number_of_nodes()):
 			if not G.has_edge(i,j):
 				G.add_edge(i, j, weight=M)
@@ -69,4 +85,17 @@ def edge_weight_sum(G):
 		weight_sum += weight
 	return weight_sum
 
+def euclidean_distance(x1,y1,x2,y2):
+	return math.sqrt((x1-x2)**2 + (y1-y2)**2)
 
+def custom_round(x):
+	frac = x - math.floor(x)
+	if frac < 0.5: 
+		return math.floor(x)
+	else:
+		return math.ceil(x)
+
+
+# edgelist = "instances/0010_k1.txt"
+# coords = "instances/kroB150_k3_2.txt"
+# G = parse(edgelist)
