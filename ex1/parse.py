@@ -1,6 +1,6 @@
 import sys
-import networkx as nx
 import math
+import networkx as nx
 
 
 def parse(file_path):
@@ -21,12 +21,15 @@ def parse(file_path):
 		G = nx.Graph()
 
 		for i in range(0,n):
+			G.add_node(i)
+
+		for i in range(0,n):
 			line = file.readline().strip().split(" ")
 			G.add_edge(int(line[0]), int(line[1]), weight=int(line[2]))
 
 		G = add_dummy_edges(G)
 
-		return G
+		return G,G.number_of_nodes(),G.number_of_edges(),k,L
 
 	elif first_line == "COORDS":
 
@@ -51,7 +54,7 @@ def parse(file_path):
 				distance = custom_round(euclidean_distance(xi,yi,xj,yj))
 				G.add_edge(i, j, weight=distance)
 
-		return G
+		return G,G.number_of_nodes(),G.number_of_edges(),k,L
 
 	else:
 
@@ -96,6 +99,6 @@ def custom_round(x):
 		return math.ceil(x)
 
 
-# edgelist = "instances/0010_k1.txt"
-# coords = "instances/kroB150_k3_2.txt"
-# G = parse(edgelist)
+#edgelist = "instances/0010_k1.txt"
+#coords = "instances/kroB150_k3_2.txt"
+#G,n,m,k,L = parse(edgelist)
