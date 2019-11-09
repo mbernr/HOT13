@@ -73,9 +73,9 @@ def add_dummy_edges(G, L, k):
 def big_M(G, L, k):
 	S = edge_weight_sum(G) + 1
 	if L <= S:
-		return L + math.ceil(math.sqrt(k)) * (S + 1)
+		return L + k*(S+1)
 	else:
-		return L + math.ceil(math.sqrt(k)) * (L + 1)
+		return L + k*(L+1)
 
 def max_edge_weight(G):
 	max_weight = 0
