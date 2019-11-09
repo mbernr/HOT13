@@ -20,10 +20,10 @@ def parse(file_path):
 
 		G = nx.Graph()
 
-		for i in range(0,n):
+		for i in range(n):
 			G.add_node(i)
 
-		for i in range(0,n):
+		for i in range(m):
 			line = file.readline().strip().split(" ")
 			G.add_edge(int(line[0]), int(line[1]), weight=int(line[2]))
 
@@ -41,14 +41,14 @@ def parse(file_path):
 
 		G = nx.Graph()
 
-		for i in range(0,n):
+		for i in range(n):
 			line = file.readline().strip().split(" ")
 			G.add_node(i, x=int(line[0]), y=int(line[1]))
 
-		for i in range(G.number_of_nodes()):
+		for i in range(n):
 			xi = G.nodes[i]["x"]
 			yi = G.nodes[i]["y"]
-			for j in range(i+1, G.number_of_nodes()):
+			for j in range(i+1, n):
 				xj = G.nodes[j]["x"]
 				yj = G.nodes[j]["y"]
 				distance = custom_round(euclidean_distance(xi,yi,xj,yj))
