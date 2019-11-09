@@ -27,7 +27,7 @@ def parse(file_path):
 			line = file.readline().strip().split(" ")
 			G.add_edge(int(line[0]), int(line[1]), weight=int(line[2]))
 
-		G = add_dummy_edges(G)
+		G = add_dummy_edges(G, L, k)
 
 		return G,G.number_of_nodes(),G.number_of_edges(),k,L
 
@@ -62,16 +62,20 @@ def parse(file_path):
 		sys.exit()
 
 
-def add_dummy_edges(G):
-	M = big_M(G)
+def add_dummy_edges(G, L, k):
+	M = big_M(G, L, k)
 	for i in range(G.number_of_nodes()):
 		for j in range(i+1, G.number_of_nodes()):
 			if not G.has_edge(i,j):
 				G.add_edge(i, j, weight=M)
 	return G
 
-def big_M(G):
-	return edge_weight_sum(G) + 1 # we need something better here
+def big_M(G, L, k):
+	S = edge_weight_sum(G) + 1
+	if L <= S:
+		return L + math.ceil(math.sqrt(k)) * (S + 1)
+	else:
+		return L + math.ceil(math.sqrt(k)) * (L + 1)
 
 def max_edge_weight(G):
 	max_weight = 0
