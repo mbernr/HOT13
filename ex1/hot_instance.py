@@ -99,3 +99,6 @@ class HotInstance:
 			return math.floor(x)
 		else:
 			return math.ceil(x)
+
+	def get_distance(self, a, b):
+		return self.G.get_edge_data(a,b)["weight"]

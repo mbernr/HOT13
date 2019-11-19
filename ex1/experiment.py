@@ -158,10 +158,11 @@ class TSPSolution(PermutationSolution):
         """Perform edge recombination."""
         return self.edge_recombination(other)
 
-i = HotInstance("instances/0010_k1.txt")
+i = HotInstance("instances/0010_k2.txt")
 s = HotSolution(i)
 
 # print(i.k, i.L, i.n, i.m)
 # print(i.G.edges().data())
 
 print(s)
+print(s.calc_objective())
