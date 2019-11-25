@@ -22,110 +22,91 @@ def cost_of_adding_driver(inst, new_driver, pos, driver_dist):
 
 
 def deterministic_construction_heuristic(inst):
-
-	# start tour with vertex 0
-	tour = [0]
-	unassigned_vertices = set([i for i in range(1,inst.n)])
-	tour_distance = 0
-
-	# greedily add vertices to tour
-	while len(unassigned_vertices) > 0:
-		min_cost = math.inf
-		best_vertex = None
-		for vertex in unassigned_vertices:
-			cost = cost_of_adding_vertex(inst, vertex, tour, tour_distance)
-			if cost < min_cost:
-				best_vertex = vertex
-				min_cost = cost
-		tour_distance += inst.get_distance(tour[len(tour)-1],best_vertex)
-		tour.append(best_vertex)
-		unassigned_vertices.remove(best_vertex)
-
-	# start with empty driver assignment
-	drivers = []
-	driver_distances = [0 for i in range(inst.k)]
-
-	# greedily add drivers to tour
-	for pos in range(inst.n):
-		min_cost = math.inf
-		best_driver = None
-		for driver in range(inst.k):
-			cost = cost_of_adding_driver(inst, driver, pos, driver_distances[driver])
-			if cost < min_cost:
-				best_driver = driver
-				min_cost = cost
-		driver_distances[best_driver] += inst.get_distance(pos,(pos+1)%inst.n)
-		drivers.append(best_driver)
-
-	return HotSolution(inst,tour=tour, drivers=drivers)
+	return construction_heuristic(inst, rand=False)
 
 
 def randomized_construction_heuristic(inst, alpha):
+	return construction_heuristic(inst, rand=True, alpha=alpha)
 
-	# start tour with vertex 0
+
+def construction_heuristic(inst, rand=False, alpha=1.0):
+
+	# starting tour with vertex 0
 	tour = [0]
 	unassigned_vertices = set([i for i in range(1,inst.n)])
 	tour_distance = 0
 
-	# add vertices to tour with greedy random heuristic
+	# add all vertices to tour
 	while len(unassigned_vertices) > 0:
 
-		# compute minimum and maximum cost
-		min_cost = math.inf
-		max_cost = 0
+		# all unassigned vertices are candidates
+		candidates = []
 		for vertex in unassigned_vertices:
-			cost = cost_of_adding_vertex(inst, vertex, tour, tour_distance)
-			if cost < min_cost:
-				min_cost = cost
-			if cost > max_cost:
-				max_cost = cost
+			candidates.append({
+				"index": vertex, 
+				"cost": cost_of_adding_vertex(inst, vertex, tour, tour_distance)
+			})
 
-		# compute restricted list of vertices 
-		restricted_candidate_list = set()
-		for vertex in unassigned_vertices:
-			cost = cost_of_adding_vertex(inst, vertex, tour, tour_distance)
-			if cost <= min_cost + alpha*(max_cost - min_cost):
-				restricted_candidate_list.add(vertex)
+		# selecting next vertex either greedily, or random greedily
+		if rand:
+			next_vertex = select_random_greedy(candidates, alpha)
+		else:
+			next_vertex = select_greedy(candidates)
 
-		# select randomly from restricted list
-		next_vertex = random.choice(tuple(restricted_candidate_list))
-
-		# add selected vertex to tour and update everything
+		# update tour
 		tour_distance += inst.get_distance(tour[len(tour)-1],next_vertex)
 		tour.append(next_vertex)
 		unassigned_vertices.remove(next_vertex)
 
-	# start with empty driver assignment
+	# starting with empty driver assignment
 	drivers = []
 	driver_distances = [0 for i in range(inst.k)]
 
-	# add drivers with greedy random heuristic
+	# add driver to every position
 	for pos in range(inst.n):
 
-		# compute minimum and maximum cost
-		min_cost = math.inf
-		max_cost = 0
+		# all drivers are candidates
+		candidates = []
 		for driver in range(inst.k):
-			cost = cost_of_adding_driver(inst, driver, pos, driver_distances[driver])
-			if cost < min_cost:
-				min_cost = cost
-			if cost > max_cost:
-				max_cost = cost
+			candidates.append({
+				"index": driver, 
+				"cost": cost_of_adding_driver(inst, driver, pos, driver_distances[driver])
+			})
 
-		# compute restricted list of drivers 
-		restricted_candidate_list = set()
-		for driver in range(inst.k):
-			cost = cost_of_adding_driver(inst, driver, pos, driver_distances[driver])
-			if cost <= min_cost + alpha*(max_cost - min_cost):
-				restricted_candidate_list.add(driver)
+		# selecting next driver either greedily, or random greedily
+		if rand:
+			next_driver = select_random_greedy(candidates, alpha)
+		else:
+			next_driver = select_greedy(candidates)
 
-		# select randomly from restricted list
-		next_driver = random.choice(tuple(restricted_candidate_list))
-
-		# add selected driver and update everything
+		# update driver assignment
 		driver_distances[next_driver] += inst.get_distance(pos,(pos+1)%inst.n)
 		drivers.append(next_driver)
 
 	return HotSolution(inst,tour=tour, drivers=drivers)
 
+
+def select_random_greedy(candidates, alpha):
+	min_cost = math.inf
+	max_cost = 0
+	for c in candidates:
+		if c["cost"] < min_cost:
+			min_cost = c["cost"]
+		if c["cost"] > max_cost:
+			max_cost = c["cost"]
+	promising_candidates = []
+	for c in candidates:
+		if c["cost"] <= min_cost + alpha*(max_cost - min_cost):
+			promising_candidates.append(c["index"])
+	return random.choice(promising_candidates)
+
+
+def select_greedy(candidates):
+	min_cost = math.inf
+	best_candidate = None
+	for c in candidates:
+		if c["cost"] < min_cost:
+			min_cost = c["cost"]
+			best_candidate = c["index"]
+	return best_candidate
 

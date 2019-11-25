@@ -167,7 +167,7 @@ print(round(det_sol.calc_objective(),2))
 
 print()
 
-rand_sol = randomized_construction_heuristic(inst, 1)
+rand_sol = randomized_construction_heuristic(inst, 0.5)
 print(rand_sol)
 print(round(rand_sol.calc_objective(),2))
 
