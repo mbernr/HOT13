@@ -161,18 +161,31 @@ class TSPSolution(PermutationSolution):
 i = HotInstance("instances/0010_k2.txt")
 s = HotSolution(i)
 
-# print(i.k, i.L, i.n, i.m)
-# print(i.G.edges().data())
+#print(i.k, i.L, i.n, i.m)
+#print(i.G.edges().data())
 
 print(s)
 print(round(s.calc_objective(),2))
 print()
 
 
-for i in range(100):
+print("neighbourhood_search_driver_flip")
+for i in range(5):
     if s.neighbourhood_search_driver_flip(step_function="next_improvement"):
         print(s)
         print(round(s.calc_objective(),2))
         print()
     else:
         print("No improvement found")
+        print()
+
+
+print("neighbourhood_search_tour_swap")
+for i in range(5):
+    if s.neighbourhood_search_tour_swap(step_function="random_improvement"):
+        print(s)
+        print(round(s.calc_objective(),2))
+        print()
+    else:
+        print("No improvement found")
+        print()
