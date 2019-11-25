@@ -1,6 +1,8 @@
 import numpy as np
 from pymhlib.solution import Solution
 from math import sqrt
+import copy
+import random
 
 from hot_instance import *
 
@@ -21,13 +23,13 @@ class HotSolution(Solution):
 
 
 	def copy(self):
-		copied_tour = np.array([self.tour[i] for i in range(self.inst.n)])
-		copied_drivers = np.array([self.drivers[i] for i in range(self.inst.n)])
+		copied_tour = np.copy(self.tour)
+		copied_drivers = np.copy(self.drivers)
 		return HotSolution(self.inst, tour=copied_tour, drivers=copied_drivers)
 
 	def copy_from(self, other: 'HotSolution'):
-		self.tour = np.array([other.tour[i] for i in range(other.inst.n)])
-		self.drivers = np.array([other.drivers[i] for i in range(other.inst.n)])
+		self.tour = np.copy(other.tour)
+		self.drivers = np.copy(other.drivers)
 		self.inst = other.inst
 
 	def __repr__(self): #TODO: nice representation with offset
@@ -96,9 +98,34 @@ class HotSolution(Solution):
 		self.tour[p1], self.tour[p2] = self.tour[p2], self.tour[p1]
 		self.drivers[p1], self.drivers[p2] = self.drivers[p2], self.drivers[p1]
 
-	def apply_driver_flip(self, edge, driver):
-		self.drivers[edge] = driver
+	def apply_driver_flip(self, pos, driver):
+		self.drivers[pos] = driver
 
 	def apply_driver_swap(self, i, j):
 		self.drivers[i], self.drivers[j] = self.drivers[j], self.drivers[i]
 
+	def neighbourhood_search_driver_flip(self, step_function="next_improvement", delta_eval=False):
+		if step_function == "random":
+			pos = random.randint(0,len(self.drivers))
+			driver = random.randint(0,self.inst.k)
+			self.apply_driver_flip(pos, driver)
+			return True
+		else:
+			best_so_far = self
+			for pos in len(self.drivers):
+				for driver in self.inst.k:
+					if delta_eval:
+						pass
+					else:
+						neighbour_solution = self.copy()
+						neighbour_solution.apply_driver_flip(pos,driver)
+						if neighbour_solution.is_better(best_so_far):
+							if step_function == "next_improvement":
+								self.apply_driver_flip(pos, driver)
+								return True
+							elif step_function == "best_improvement":	
+								best_so_far = neighbour_solution
+			if best_so_far != self:
+				self.copy_from(best_so_far)
+				return True
+		return False
