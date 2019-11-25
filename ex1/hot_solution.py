@@ -123,7 +123,60 @@ class HotSolution(Solution):
 							if step_function == "next_improvement":
 								self.apply_driver_flip(pos, driver)
 								return True
-							elif step_function == "best_improvement":	
+							elif step_function == "best_improvement":
+								best_so_far = neighbour_solution
+			if best_so_far != self:
+				self.copy_from(best_so_far)
+				return True
+		return False
+
+		def neighbourhood_search_driver_swap(self, step_function="next_improvement", delta_eval=False):
+		if step_function == "random":
+			driver1 = random.randint(0,self.inst.k)
+			driver2 = random.randint(0,self.inst.k)
+			self.apply_driver_swap(driver1, driver2)
+			return True
+		else:
+			best_so_far = self
+			for driver1 in self.inst.k:
+				for driver2 in self.inst.k:
+					if delta_eval:
+						pass
+					else:
+						neighbour_solution = self.copy()
+						neighbour_solution.apply_driver_swap(driver1,driver2)
+						if neighbour_solution.is_better(best_so_far):
+							if step_function == "next_improvement":
+								self.apply_driver_swap(driver1, driver2)
+								return True
+							elif step_function == "best_improvement":
+								best_so_far = neighbour_solution
+			if best_so_far != self:
+				self.copy_from(best_so_far)
+				return True
+		return False
+
+
+		def neighbourhood_search_tour_swap(self, step_function="next_improvement", delta_eval=False):
+		if step_function == "random":
+			pos1 = random.randint(0,len(self.drivers))
+			pos2 = random.randint(0,len(self.drivers))
+			self.apply_driver_flip(pos, driver)
+			return True
+		else:
+			best_so_far = self
+			for pos1 in range(len(self.drivers)):
+				for pos2 in range(len(self.drivers)):
+					if delta_eval:
+						pass
+					else:
+						neighbour_solution = self.copy()
+						neighbour_solution.apply_tour_swap(pos1, pos2)
+						if neighbour_solution.is_better(best_so_far):
+							if step_function == "next_improvement":
+								self.apply_tour_swap(pos1, pos2)
+								return True
+							elif step_function == "best_improvement":
 								best_so_far = neighbour_solution
 			if best_so_far != self:
 				self.copy_from(best_so_far)
