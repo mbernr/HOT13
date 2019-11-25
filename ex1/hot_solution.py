@@ -27,12 +27,17 @@ class HotSolution(Solution):
 	def copy(self):
 		copied_tour = np.copy(self.tour)
 		copied_drivers = np.copy(self.drivers)
-		return HotSolution(self.inst, tour=copied_tour, drivers=copied_drivers)
+		copied_sol = HotSolution(self.inst, tour=copied_tour, drivers=copied_drivers)
+		copied_sol.obj_val = -1
+		copied_sol.obj_val_valid = False
+		return copied_sol
 
 	def copy_from(self, other: 'HotSolution'):
 		self.tour = np.copy(other.tour)
 		self.drivers = np.copy(other.drivers)
 		self.inst = other.inst
+		self.obj_val = other.obj_val
+		self.obj_val_valid = other.obj_val_valid
 
 	def __repr__(self): #TODO: nice representation with offset
 		s = ""
@@ -68,7 +73,7 @@ class HotSolution(Solution):
 		pass
 
 	def __eq__(self, other):
-		if self.inst == other.inst and self.tour.all() == other.tour.all() and self.drivers.all() == other.drivers.all():
+		if self.inst == other.inst and (self.tour == other.tour).all() and (self.drivers == other.drivers).all():
 			return True
 		else:
 			return False
@@ -99,14 +104,14 @@ class HotSolution(Solution):
 	def apply_driver_flip(self, pos, driver):
 		self.drivers[pos] = driver
 
-	def apply_driver_swap(self, i, j):
-		self.drivers[i], self.drivers[j] = self.drivers[j], self.drivers[i]
+	#def apply_driver_swap(self, i, j):
+	#	self.drivers[i], self.drivers[j] = self.drivers[j], self.drivers[i]
+
 
 	def neighbourhood_search_driver_flip(self, step_function="next_improvement", delta_eval=False):
-		if step_function == "random":
-			pos = random.randint(0,len(self.drivers))
-			driver = random.randint(0,self.inst.k)
-			print(pos, driver)
+		if step_function == "random_improvement":
+			pos = random.randint(0, len(self.drivers)-1)
+			driver = random.randint(0, self.inst.k-1)
 			self.apply_driver_flip(pos, driver)
 			return True
 		else:
@@ -118,7 +123,8 @@ class HotSolution(Solution):
 					else:
 						neighbour_solution = self.copy()
 						neighbour_solution.apply_driver_flip(pos,driver)
-						if neighbour_solution.is_better(best_so_far):
+						#if neighbour_solution.is_better(best_so_far):
+						if neighbour_solution.calc_objective() < best_so_far.calc_objective():
 							if step_function == "next_improvement":
 								self.apply_driver_flip(pos, driver)
 								return True
@@ -129,38 +135,38 @@ class HotSolution(Solution):
 				return True
 		return False
 
-	def neighbourhood_search_driver_swap(self, step_function="next_improvement", delta_eval=False):
-		if step_function == "random":
-			driver1 = random.randint(0,self.inst.k)
-			driver2 = random.randint(0,self.inst.k)
-			self.apply_driver_swap(driver1, driver2)
-			return True
-		else:
-			best_so_far = self
-			for driver1 in self.inst.k:
-				for driver2 in self.inst.k:
-					if delta_eval:
-						pass
-					else:
-						neighbour_solution = self.copy()
-						neighbour_solution.apply_driver_swap(driver1,driver2)
-						if neighbour_solution.is_better(best_so_far):
-							if step_function == "next_improvement":
-								self.apply_driver_swap(driver1, driver2)
-								return True
-							elif step_function == "best_improvement":
-								best_so_far = neighbour_solution
-			if best_so_far != self:
-				self.copy_from(best_so_far)
-				return True
-		return False
-
+#	def neighbourhood_search_driver_swap(self, step_function="next_improvement", delta_eval=False):
+#		if step_function == "random_improvement":
+#			driver1 = random.randint(0,self.inst.k-1)
+#			driver2 = random.randint(0,self.inst.k-1)
+#			self.apply_driver_swap(driver1, driver2)
+#			return True
+#		else:
+#			best_so_far = self
+#			for driver1 in range(self.inst.k):
+#				for driver2 in range(self.inst.k):
+#					if delta_eval:
+#						pass
+#					else:
+#						neighbour_solution = self.copy()
+#						neighbour_solution.apply_driver_swap(driver1,driver2)
+#						#if neighbour_solution.is_better(best_so_far):
+#						if neighbour_solution.calc_objective() < best_so_far.calc_objective():
+#							if step_function == "next_improvement":
+#								self.apply_driver_swap(driver1, driver2)
+#								return True
+#							elif step_function == "best_improvement":
+#								best_so_far = neighbour_solution
+#			if best_so_far != self:
+#				self.copy_from(best_so_far)
+#				return True
+#		return False
 
 	def neighbourhood_search_tour_swap(self, step_function="next_improvement", delta_eval=False):
-		if step_function == "random":
-			pos1 = random.randint(0,len(self.drivers))
-			pos2 = random.randint(0,len(self.drivers))
-			self.apply_driver_flip(pos, driver)
+		if step_function == "random_improvement":
+			pos1 = random.randint(0,len(self.drivers)-1)
+			pos2 = random.randint(0,len(self.drivers)-1)
+			self.apply_tour_swap(pos1, pos2)
 			return True
 		else:
 			best_so_far = self
@@ -171,7 +177,8 @@ class HotSolution(Solution):
 					else:
 						neighbour_solution = self.copy()
 						neighbour_solution.apply_tour_swap(pos1, pos2)
-						if neighbour_solution.is_better(best_so_far):
+						#if neighbour_solution.is_better(best_so_far):
+						if neighbour_solution.calc_objective() < best_so_far.calc_objective():
 							if step_function == "next_improvement":
 								self.apply_tour_swap(pos1, pos2)
 								return True
