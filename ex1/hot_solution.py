@@ -18,7 +18,7 @@ class HotSolution(Solution):
 			self.tour = tour
 		if drivers != None:
 			self.drivers = drivers
-		
+
 
 	def copy(self):
 		copied_tour = np.array([self.tour[i] for i in range(self.inst.n)])
@@ -91,6 +91,10 @@ class HotSolution(Solution):
 			raise ValueError("Invalid driver in solution")
 
 		super().check()
+
+	def apply_tour_swap(self, p1, p2):
+		self.tour[p1], self.tour[p2] = self.tour[p2], self.tour[p1]
+		self.drivers[p1], self.drivers[p2] = self.drivers[p2], self.drivers[p1]
 
 	def apply_driver_flip(self, edge, driver):
 		self.drivers[edge] = driver
