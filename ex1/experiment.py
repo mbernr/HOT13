@@ -165,4 +165,14 @@ s = HotSolution(i)
 # print(i.G.edges().data())
 
 print(s)
-print(s.calc_objective())
+print(round(s.calc_objective(),2))
+print()
+
+
+for i in range(100):
+    if s.neighbourhood_search_driver_flip(step_function="next_improvement"):
+        print(s)
+        print(round(s.calc_objective(),2))
+        print()
+    else:
+        print("No improvement found")

@@ -9,17 +9,19 @@ from hot_instance import *
 
 class HotSolution(Solution):
 
-	def __init__(self, inst: HotInstance, tour=None, drivers=None):
+	def __init__(self, inst: HotInstance, tour=[], drivers=[]):
 		super().__init__(inst=inst)
 		self.obj_val_valid = False
 		self.to_maximize = False
 
-		self.tour = np.array([i for i in range(inst.n)])
-		self.drivers = np.zeros(self.inst.n, dtype=int)
-		if tour != None:
+		if len(tour) > 0:
 			self.tour = tour
-		if drivers != None:
+		else:
+			self.tour = np.array([i for i in range(inst.n)])
+		if len(drivers) > 0:
 			self.drivers = drivers
+		else:
+			self.drivers = np.zeros(self.inst.n, dtype=int)
 
 
 	def copy(self):
@@ -56,10 +58,6 @@ class HotSolution(Solution):
 		dist = self.inst.get_distance(self.tour[n-1], self.tour[0])
 		driver_distances[driver] -= dist
 
-		print()
-
-		# set(self.tour)
-
 		squared_error_per_driver = np.square(driver_distances)
 		squared_error = np.sum(squared_error_per_driver)
 		return sqrt((1/k)*squared_error)
@@ -70,7 +68,7 @@ class HotSolution(Solution):
 		pass
 
 	def __eq__(self, other):
-		if self.inst == other.inst and self.tour == other.tour and self.drivers == other.drivers:
+		if self.inst == other.inst and self.tour.all() == other.tour.all() and self.drivers.all() == other.drivers.all():
 			return True
 		else:
 			return False
@@ -108,12 +106,13 @@ class HotSolution(Solution):
 		if step_function == "random":
 			pos = random.randint(0,len(self.drivers))
 			driver = random.randint(0,self.inst.k)
+			print(pos, driver)
 			self.apply_driver_flip(pos, driver)
 			return True
 		else:
 			best_so_far = self
-			for pos in len(self.drivers):
-				for driver in self.inst.k:
+			for pos in range(len(self.drivers)):
+				for driver in range(self.inst.k):
 					if delta_eval:
 						pass
 					else:
