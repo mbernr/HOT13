@@ -129,7 +129,7 @@ class HotSolution(Solution):
 				return True
 		return False
 
-		def neighbourhood_search_driver_swap(self, step_function="next_improvement", delta_eval=False):
+	def neighbourhood_search_driver_swap(self, step_function="next_improvement", delta_eval=False):
 		if step_function == "random":
 			driver1 = random.randint(0,self.inst.k)
 			driver2 = random.randint(0,self.inst.k)
@@ -156,7 +156,7 @@ class HotSolution(Solution):
 		return False
 
 
-		def neighbourhood_search_tour_swap(self, step_function="next_improvement", delta_eval=False):
+	def neighbourhood_search_tour_swap(self, step_function="next_improvement", delta_eval=False):
 		if step_function == "random":
 			pos1 = random.randint(0,len(self.drivers))
 			pos2 = random.randint(0,len(self.drivers))
