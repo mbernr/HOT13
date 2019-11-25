@@ -158,32 +158,3 @@ class TSPSolution(PermutationSolution):
     def crossover(self, other: 'TSPSolution') -> 'TSPSolution':
         """Perform edge recombination."""
         return self.edge_recombination(other)
-
-inst = HotInstance("instances/0010_k2.txt")
-
-det_sol = deterministic_construction_heuristic(inst)
-print(det_sol)
-print(round(det_sol.calc_objective(),2))
-
-print()
-
-rand_sol = randomized_construction_heuristic(inst, 0.5)
-print(rand_sol)
-print(round(rand_sol.calc_objective(),2))
-
-# print(i.k, i.L, i.n, i.m)
-# print(i.G.edges().data())
-'''
-print(s)
-print(round(s.calc_objective(),2))
-print()
-
-
-for i in range(0):
-    if s.neighbourhood_search_driver_flip(step_function="next_improvement"):
-        print(s)
-        print(round(s.calc_objective(),2))
-        print()
-    else:
-        print("No improvement found")
-'''
