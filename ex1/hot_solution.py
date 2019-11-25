@@ -18,6 +18,7 @@ class HotSolution(Solution):
 			self.tour = tour
 		else:
 			self.tour = np.array([i for i in range(inst.n)])
+			
 		if len(drivers) > 0:
 			self.drivers = drivers
 		else:
