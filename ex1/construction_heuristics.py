@@ -16,8 +16,8 @@ def cost_of_adding_vertex(inst, new_vertex, tour, tour_distance):
 
 # Idea behind cost function for adding a driver:
 # Always pick the driver, that will be closest to L  
-def cost_of_adding_driver(inst, new_driver, pos, tour, driver_dist):
-	d = inst.get_distance(pos,(pos+1)%len(tour))
+def cost_of_adding_driver(inst, new_driver, pos, driver_dist):
+	d = inst.get_distance(pos,(pos+1)%inst.n)
 	return abs(inst.L - (driver_dist + d))
 
 
@@ -50,11 +50,11 @@ def deterministic_construction_heuristic(inst):
 		min_cost = math.inf
 		best_driver = None
 		for driver in range(inst.k):
-			cost = cost_of_adding_driver(inst, driver, pos, tour, driver_distances[driver])
+			cost = cost_of_adding_driver(inst, driver, pos, driver_distances[driver])
 			if cost < min_cost:
 				best_driver = driver
 				min_cost = cost
-		driver_distances[best_driver] += inst.get_distance(pos,(pos+1)%len(tour))
+		driver_distances[best_driver] += inst.get_distance(pos,(pos+1)%inst.n)
 		drivers.append(best_driver)
 
 	return HotSolution(inst,tour=tour, drivers=drivers)
@@ -106,7 +106,7 @@ def randomized_construction_heuristic(inst, alpha):
 		min_cost = math.inf
 		max_cost = 0
 		for driver in range(inst.k):
-			cost = cost_of_adding_driver(inst, driver, pos, tour, driver_distances[driver])
+			cost = cost_of_adding_driver(inst, driver, pos, driver_distances[driver])
 			if cost < min_cost:
 				min_cost = cost
 			if cost > max_cost:
@@ -115,7 +115,7 @@ def randomized_construction_heuristic(inst, alpha):
 		# compute restricted list of drivers 
 		restricted_candidate_list = set()
 		for driver in range(inst.k):
-			cost = cost_of_adding_driver(inst, driver, pos, tour, driver_distances[driver])
+			cost = cost_of_adding_driver(inst, driver, pos, driver_distances[driver])
 			if cost <= min_cost + alpha*(max_cost - min_cost):
 				restricted_candidate_list.add(driver)
 
@@ -123,7 +123,7 @@ def randomized_construction_heuristic(inst, alpha):
 		next_driver = random.choice(tuple(restricted_candidate_list))
 
 		# add selected driver and update everything
-		driver_distances[next_driver] += inst.get_distance(pos,(pos+1)%len(tour))
+		driver_distances[next_driver] += inst.get_distance(pos,(pos+1)%inst.n)
 		drivers.append(next_driver)
 
 	return HotSolution(inst,tour=tour, drivers=drivers)
