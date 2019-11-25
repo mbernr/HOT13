@@ -91,3 +91,10 @@ class HotSolution(Solution):
 			raise ValueError("Invalid driver in solution")
 
 		super().check()
+
+	def apply_driver_flip(self, edge, driver):
+		self.drivers[edge] = driver
+
+	def apply_driver_swap(self, i, j):
+		self.drivers[i], self.drivers[j] = self.drivers[j], self.drivers[i]
+
