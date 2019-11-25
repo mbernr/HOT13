@@ -12,6 +12,7 @@ from pymhlib.solution import TObj
 
 from hot_instance import *
 from hot_solution import *
+from construction_heuristics import *
 
 
 class TSPInstance:
@@ -158,21 +159,31 @@ class TSPSolution(PermutationSolution):
         """Perform edge recombination."""
         return self.edge_recombination(other)
 
-i = HotInstance("instances/0010_k2.txt")
-s = HotSolution(i)
+inst = HotInstance("instances/0010_k2.txt")
+
+det_sol = deterministic_construction_heuristic(inst)
+print(det_sol)
+print(round(det_sol.calc_objective(),2))
+
+print()
+
+rand_sol = randomized_construction_heuristic(inst, 1)
+print(rand_sol)
+print(round(rand_sol.calc_objective(),2))
 
 # print(i.k, i.L, i.n, i.m)
 # print(i.G.edges().data())
-
+'''
 print(s)
 print(round(s.calc_objective(),2))
 print()
 
 
-for i in range(100):
+for i in range(0):
     if s.neighbourhood_search_driver_flip(step_function="next_improvement"):
         print(s)
         print(round(s.calc_objective(),2))
         print()
     else:
         print("No improvement found")
+'''
