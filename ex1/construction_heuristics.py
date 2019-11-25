@@ -5,6 +5,17 @@ import math
 from hot_solution import *
 
 
+### call these functions ###
+
+def construct_greedy(inst):
+	return construct(inst, rand=False)
+
+def construct_random_greedy(inst, alpha):
+	return construct(inst, rand=True, alpha=alpha)
+
+
+### this makes it work ###
+
 # Idea behind cost function for adding a vertex:
 # Step 1)	select edge closest to (L*k)/n
 # Step i+1)	select edge closest to (L*k - sum of weights of assigned edges) / (n - number of assigned edges) 
@@ -21,15 +32,7 @@ def cost_of_adding_driver(inst, new_driver, pos, driver_dist):
 	return abs(inst.L - (driver_dist + d))
 
 
-def deterministic_construction_heuristic(inst):
-	return construction_heuristic(inst, rand=False)
-
-
-def randomized_construction_heuristic(inst, alpha):
-	return construction_heuristic(inst, rand=True, alpha=alpha)
-
-
-def construction_heuristic(inst, rand=False, alpha=1.0):
+def construct(inst, rand=False, alpha=1.0):
 
 	# starting tour with vertex 0
 	tour = [0]
