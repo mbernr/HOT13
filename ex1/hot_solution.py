@@ -52,6 +52,7 @@ class HotSolution(Solution):
 
 	def calc_objective(self):
 		self.calc_driver_distances()
+		print(self.driver_distances)
 		squared_error_per_driver = np.square(self.driver_distances)
 		squared_error = np.sum(squared_error_per_driver)
 		self.obj_val = sqrt((1/self.inst.k)*squared_error)

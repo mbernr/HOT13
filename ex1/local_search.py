@@ -10,7 +10,7 @@ def local_search(sol, ns, max_iterations=math.inf, max_time=math.inf, step_funct
 
 		# checking if max number of iterations is exceeded
 		iterations += 1
-		if iterations > max_iterations:
+		if iterations >= max_iterations:
 			break
 
 		# checking if max time is exceeded

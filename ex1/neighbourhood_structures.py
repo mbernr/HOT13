@@ -51,8 +51,8 @@ class TourReversal:
 class DriverOneExchange:
 
 	def apply(self, sol, pos, driver):
-		sol.drivers[pos] = driver
 		sol.obj_val = self.delta_eval(sol, pos, driver)
+		sol.drivers[pos] = driver
 
 	def move(self, sol, step_function="best_improvement", using_delta_eval=True):
 		if step_function == "random_improvement":
@@ -82,15 +82,18 @@ class DriverOneExchange:
 		return False
 
 	def delta_eval(self, sol, pos, new_driver):
-		squared_error = (sol.obj_val**2)*2
+		squared_error = (sol.obj_val**2)*sol.inst.k
 		old_driver = sol.drivers[pos]
+		edge_weight = sol.inst.get_distance(pos, (pos+1)%sol.inst.n)
 		squared_error -= sol.driver_distances[old_driver]**2
 		squared_error -= sol.driver_distances[new_driver]**2
-		edge_weight = sol.inst.get_distance(pos, (pos+1)%sol.inst.n)
 		sol.driver_distances[old_driver] -= edge_weight
 		sol.driver_distances[new_driver] += edge_weight
 		squared_error += sol.driver_distances[old_driver]**2
 		squared_error += sol.driver_distances[new_driver]**2
+		print(old_driver, new_driver)
+		print(sol.driver_distances)
+		print(math.sqrt(squared_error / sol.inst.k))
 		return math.sqrt(squared_error / sol.inst.k)
 
 

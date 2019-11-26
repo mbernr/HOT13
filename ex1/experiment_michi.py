@@ -14,7 +14,7 @@ print(round(sol.calc_objective(),2))
 print()
 
 # best_improvement, next_improvement, random_improvement
-local_search(sol, ns, max_time=1, step_function="random_improvement", using_delta_eval=False)
+local_search(sol, ns, max_iterations=1, step_function="random_improvement", using_delta_eval=False)
 
 
 print(sol)
