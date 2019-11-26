@@ -100,37 +100,52 @@ class OneBlockMove:
 	def apply(self, sol, old_pos, new_pos):
 		if old_pos == new_pos:
 			print("old_pos and new_pos are the same")
+		else:
+			if old_pos > new_pos:
+				print("new<old")
+				size = len(sol.tour)
+				temp_tour = np.zeros(size)
+				temp_drivers = np.zeros(size)
 
-		if old_pos > new_pos:
-			size = len(sol.tour)
-			temp = np.zeros(size)
+				for i in range(new_pos-1):
+					temp_tour[i] = sol.tour[i]
+					temp_drivers[i] = sol.drivers[i]
 
-			for i in range(new_pos-1):
-				temp[i] = sol.tour[i]
+				temp_tour[new_pos] = sol.tour[old_pos]
+				temp_drivers[new_pos] = sol.drivers[old_pos]
 
-			temp[new_pos] = sol.tour[old_pos]
+				for i in range(old_pos - new_pos):
+					temp_tour[new_pos + i + 1] = sol.tour[new_pos + i]
+					temp_drivers[new_pos + i + 1] = sol.drivers[new_pos + i]
 
-			for i in range(old_pos - new_pos):
-				temp[new_pos + i + 1] = sol.tour[new_pos + i]
+				for i in range(size - old_pos):
+					temp_tour[old_pos + i] = sol.tour[old_pos + i]
+					temp_drivers[old_pos + i] = sol.drivers[old_pos + i]
 
-			for i in range(size - old_pos):
-				temp[old_pos + i] = sol.tour[old_pos + i]
+			if old_pos < new_pos:
+				print("old<new")
+				size = len(sol.tour)
+				temp_tour = np.zeros(size)
+				temp_drivers = np.zeros(size)
 
-		if old_pos < new_pos:
-			size = len(sol.tour)
-			temp = np.zeros(size)
+				for i in range(old_pos-1):
+					temp_tour[i] = sol.tour[i]
+					temp_drivers[i] = sol.drivers[i]
 
-			for i in range(old_pos-1):
-				temp[i] = sol.tour[i]
+				for i in range(new_pos - old_pos):
+					temp_tour[old_pos + i] = sol.tour[old_pos + i + 1]
+					temp_drivers[old_pos + i] = sol.drivers[old_pos + i + 1]
 
-			for i in range(new_pos - old_pos):
-				temp[old_pos + i] = sol.tour[old_pos + i + 1]
-
-			temp[new_pos] = sol.tour[old_pos]
+			temp_tour[new_pos] = sol.tour[old_pos]
+			temp_drivers[new_pos] = sol.drivers[old_pos]
 
 			for i in range(size - new_pos):
-				temp[new_pos + i] = sol.tour[new_pos + i]
+				temp_tour[new_pos + i] = sol.tour[new_pos + i]
+				temp_drivers[new_pos + i] = sol.drivers[new_pos + i]
 
+			sol.tour = temp_tour
+			sol.drivers = temp_drivers
+			self.delta_eval(sol, old_pos, new_pos)
 
 	def move(self, sol, step_function="best_improvement", using_delta_eval=True):
 		if step_function == "random_improvement":
