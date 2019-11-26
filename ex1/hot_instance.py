@@ -101,5 +101,4 @@ class HotInstance:
 			return math.ceil(x)
 
 	def get_distance(self, a, b):
-		print("a: ", a, " b: ", b)
 		return self.G.get_edge_data(a,b)["weight"]
