@@ -54,13 +54,13 @@ class DriverOneExchange:
 
 	def move(self, sol, step_function="best_improvement", using_delta_eval=True):
 		if step_function == "random_improvement":
-			pos = random.randint(0, len(sol.drivers)-1)
+			pos = random.randint(0, sol.inst.n-1)
 			driver = random.randint(0, sol.inst.k-1)
 			self.apply(sol, pos, driver)
 			return True
 		else:
 			best_so_far = sol
-			for pos in range(len(sol.drivers)):
+			for pos in range(sol.inst.n):
 				for driver in range(sol.inst.k):
 					if using_delta_eval:
 						pass

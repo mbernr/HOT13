@@ -13,9 +13,6 @@ print(round(sol.calc_objective(),2))
 print()
 
 for i in range(100):
-	print(sol)
-	print(round(sol.calc_objective(),2))
-	print()
 	if not ns.move(sol, step_function="random_improvement", using_delta_eval=False):
 		break
 
