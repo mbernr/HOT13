@@ -24,21 +24,21 @@ class HotSolution(Solution):
 		else:
 			self.drivers = np.zeros(self.inst.n, dtype=int)
 
+		self.calc_objective()
+
 
 	def copy(self):
 		copied_tour = np.copy(self.tour)
 		copied_drivers = np.copy(self.drivers)
 		copied_sol = HotSolution(self.inst, tour=copied_tour, drivers=copied_drivers)
-		copied_sol.obj_val = -1
-		copied_sol.obj_val_valid = False
+		copied_sol.calc_objective()
 		return copied_sol
 
 	def copy_from(self, other: 'HotSolution'):
 		self.tour = np.copy(other.tour)
 		self.drivers = np.copy(other.drivers)
 		self.inst = other.inst
-		self.obj_val = other.obj_val
-		self.obj_val_valid = other.obj_val_valid
+		self.calc_objective()
 
 	def __repr__(self): #TODO: nice representation with offset
 		s = ""
@@ -49,24 +49,28 @@ class HotSolution(Solution):
 			s += str(driver) + " "
 		return s
 
-	def calc_objective(self):
 
+	def calc_objective(self):
+		self.calc_driver_distances()
+		squared_error_per_driver = np.square(self.driver_distances)
+		squared_error = np.sum(squared_error_per_driver)
+		self.obj_val = sqrt((1/self.inst.k)*squared_error)
+		self.obj_val_valid = True
+		return self.obj_val
+
+
+	def calc_driver_distances(self):
 		k = self.inst.k
 		n = self.inst.n
 		L = self.inst.L
-		driver_distances = np.full(k, L)
-
+		self.driver_distances = np.full(k, L)
 		for i in range(n-1):
 			driver = self.drivers[i]
 			dist = self.inst.get_distance(self.tour[i], self.tour[i+1])
-			driver_distances[driver] -= dist
+			self.driver_distances[driver] -= dist
 		driver = self.drivers[n-1]
 		dist = self.inst.get_distance(self.tour[n-1], self.tour[0])
-		driver_distances[driver] -= dist
-
-		squared_error_per_driver = np.square(driver_distances)
-		squared_error = np.sum(squared_error_per_driver)
-		return sqrt((1/k)*squared_error)
+		self.driver_distances[driver] -= dist
 
 
 	def initialize(self, k):
