@@ -100,7 +100,9 @@ class HotSolution(Solution):
 
 	def apply_tour_swap(self, p1, p2):
 		self.tour[p1], self.tour[p2] = self.tour[p2], self.tour[p1]
-		self.drivers[p1], self.drivers[p2] = self.drivers[p2], self.drivers[p1]
+		# self.drivers[p1], self.drivers[p2] = self.drivers[p2], self.drivers[p1]
+		# reassigning drivers may or may not make sense. in any case,
+		# the driver assignment is disturbed by the tour swap
 
 	def apply_driver_flip(self, pos, driver):
 		self.drivers[pos] = driver

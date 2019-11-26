@@ -27,6 +27,7 @@ def cost_of_adding_vertex(inst, new_vertex, tour, tour_distance):
 
 # Idea behind cost function for adding a driver:
 # Always pick the driver, that will be closest to L  
+# Possible problem: Can overshoot by 50%. Fix?
 def cost_of_adding_driver(inst, new_driver, pos, driver_dist):
 	d = inst.get_distance(pos,(pos+1)%inst.n)
 	return abs(inst.L - (driver_dist + d))
