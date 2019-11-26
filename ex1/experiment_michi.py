@@ -1,24 +1,29 @@
 from hot_instance import *
 from hot_solution import *
 from construction_heuristics import *
-from neighbourhood_move import *
+from neighbourhood_structures import *
 
 
 inst = HotInstance("instances/0010_k2.txt")
 sol = construct_greedy(inst)
-ns = DriverOneExchange()
+ns = TourReversal()
 
 print(sol)
 print(round(sol.calc_objective(),2))
 print()
 
 for i in range(100):
-	if not ns.move(sol, step_function="best_improvement", using_delta_eval=False):
+	print(sol)
+	print(round(sol.calc_objective(),2))
+	print()
+	if not ns.move(sol, step_function="random_improvement", using_delta_eval=False):
 		break
 
 
 print(sol)
 print(round(sol.calc_objective(),2))
+print()
+
 
 '''
 print(i.k, i.L, i.n, i.m)
