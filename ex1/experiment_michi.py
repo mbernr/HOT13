@@ -2,19 +2,19 @@ from hot_instance import *
 from hot_solution import *
 from construction_heuristics import *
 from neighbourhood_structures import *
+from local_search import *
 
 
 inst = HotInstance("instances/0010_k2.txt")
 sol = construct_greedy(inst)
-ns = TourReversal()
+ns = DriverOneExchange()
 
 print(sol)
 print(round(sol.calc_objective(),2))
 print()
 
-for i in range(100):
-	if not ns.move(sol, step_function="random_improvement", using_delta_eval=False):
-		break
+# best_improvement, next_improvement, random_improvement
+local_search(sol, ns, max_time=10, step_function="random_improvement", using_delta_eval=False)
 
 
 print(sol)
