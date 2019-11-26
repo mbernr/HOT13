@@ -3,7 +3,7 @@ import random
 
 
 class TourReversal:
-	
+
 	def apply(self, sol, p1, p2):
 		sol.tour = self.reverse_array_section(sol.tour, p1,p2)
 		sol.drivers = self.reverse_array_section(sol.drivers, p1,p2)
@@ -91,7 +91,7 @@ class OneBlockMove:
 
 		if old_pos > new_pos:
 			size = len(sol.tour)
-			temp = np.zeroes(size)
+			temp = np.zeros(size)
 
 			for i in range(new_pos-1):
 				temp[i] = sol.tour[i]
@@ -101,12 +101,12 @@ class OneBlockMove:
 			for i in range(old_pos - new_pos):
 				temp[new_pos + i + 1] = sol.tour[new_pos + i]
 
-			for i in range(size - old pos):
+			for i in range(size - old_pos):
 				temp[old_pos + i] = sol.tour[old_pos + i]
 
 		if old_pos < new_pos:
 			size = len(sol.tour)
-			temp = np.zeroes(size)
+			temp = np.zeros(size)
 
 			for i in range(old_pos-1):
 				temp[i] = sol.tour[i]

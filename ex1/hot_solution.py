@@ -18,7 +18,7 @@ class HotSolution(Solution):
 			self.tour = np.array(tour)
 		else:
 			self.tour = np.array([i for i in range(inst.n)])
-			
+
 		if len(drivers) > 0:
 			self.drivers = np.array(drivers)
 		else:
@@ -107,8 +107,15 @@ class HotSolution(Solution):
 	def apply_driver_flip(self, pos, driver):
 		self.drivers[pos] = driver
 
-	#def apply_driver_swap(self, i, j):
-	#	self.drivers[i], self.drivers[j] = self.drivers[j], self.drivers[i]
+	#we may want to give hints on what the parameters should be
+	def apply_k_driver_exchange(self, positions, change_to):
+		if len(position) != len(change_to):
+			print("position and change_to don't have the same number of elements")
+		else:
+			for i in range(len(position)):
+				self.drivers[position[i]] = change_to[i]
+
+
 
 
 	def neighbourhood_search_driver_flip(self, step_function="next_improvement", delta_eval=False):
@@ -138,16 +145,28 @@ class HotSolution(Solution):
 				return True
 		return False
 
-#	def neighbourhood_search_driver_swap(self, step_function="next_improvement", delta_eval=False):
+#	def neighbourhood_search_k_driver_exchange(self, k, step_function="next_improvement", delta_eval=False):
+#		positions = np.zeros(k)
+#		change_to = np.zeros(k)
+#
 #		if step_function == "random_improvement":
-#			driver1 = random.randint(0,self.inst.k-1)
-#			driver2 = random.randint(0,self.inst.k-1)
-#			self.apply_driver_swap(driver1, driver2)
+#			#generate k positions
+#			for i in range(k):
+#				positions[i] = random.randint(0, len(self.tour)-1)
+#
+#			#generate k new drivers
+#			for i in range(k):
+#				change_to[i] = random.randint(0, self.inst.k-1)
+#
+#			self.apply_k_driver_exchange(positions, change_to)
 #			return True
 #		else:
 #			best_so_far = self
-#			for driver1 in range(self.inst.k):
-#				for driver2 in range(self.inst.k):
+#
+#			for slot in range(k):
+#				for new_pos in range(len(self.tour)):
+#					for new_dr in range(len(self.inst.k)):
+#
 #					if delta_eval:
 #						pass
 #					else:
