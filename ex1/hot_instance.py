@@ -53,7 +53,7 @@ class HotInstance:
 					distance = custom_round(euclidean_distance(xi,yi,xj,yj))
 					G.add_edge(i, j, weight=distance)
 
-		self.n = n 
+		self.n = n
 		self.m = G.number_of_edges()
 		self.k = k
 		self.L = L
@@ -95,10 +95,11 @@ class HotInstance:
 
 	def custom_round(self, x):
 		frac = x - math.floor(x)
-		if frac < 0.5: 
+		if frac < 0.5:
 			return math.floor(x)
 		else:
 			return math.ceil(x)
 
 	def get_distance(self, a, b):
+		print("a: ", a, " b: ", b)
 		return self.G.get_edge_data(a,b)["weight"]

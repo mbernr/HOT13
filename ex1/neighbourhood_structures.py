@@ -104,54 +104,52 @@ class OneBlockMove:
 
 	#moves a block from old position to new position. Everything else gets swifted accordingly to make room for it
 	def apply(self, sol, old_pos, new_pos):
+		print("old solution: ")
 		if old_pos == new_pos:
 			print("old_pos and new_pos are the same")
 		else:
 			if old_pos > new_pos:
 				print("new<old")
 				size = len(sol.tour)
-				temp_tour = np.zeros(size)
-				temp_drivers = np.zeros(size)
 
-				for i in range(new_pos-1):
-					temp_tour[i] = sol.tour[i]
-					temp_drivers[i] = sol.drivers[i]
+				temp_tour = sol.tour[:new_pos]
+				#print(temp_tour)
+				temp_tour = np.append(temp_tour, sol.tour[old_pos])
+				#print(temp_tour)
+				temp_tour = np.append(temp_tour, sol.tour[(new_pos):(old_pos)])
+				#print(temp_tour)
+				if old_pos!=size:
+					temp_tour = np.append(temp_tour, sol.tour[(old_pos + 1):])
+					#print(temp_tour)
 
-				temp_tour[new_pos] = sol.tour[old_pos]
-				temp_drivers[new_pos] = sol.drivers[old_pos]
+				temp_drivers = sol.drivers[:new_pos]
+				temp_drivers = np.append(temp_drivers, sol.drivers[old_pos])
+				temp_drivers = np.append(temp_drivers, sol.drivers[(new_pos):(old_pos)])
+				temp_drivers = np.append(temp_drivers, sol.drivers[(old_pos + 1):])
 
-				for i in range(old_pos - new_pos):
-					temp_tour[new_pos + i + 1] = sol.tour[new_pos + i]
-					temp_drivers[new_pos + i + 1] = sol.drivers[new_pos + i]
 
-				for i in range(size - old_pos):
-					temp_tour[old_pos + i] = sol.tour[old_pos + i]
-					temp_drivers[old_pos + i] = sol.drivers[old_pos + i]
 
 			if old_pos < new_pos:
 				print("old<new")
 				size = len(sol.tour)
-				temp_tour = np.zeros(size)
-				temp_drivers = np.zeros(size)
+				temp_tour = []
+				if (old_pos>0):
+					temp_tour = sol.tour[:(old_pos)]
+				temp_tour = np.append(temp_tour, sol.tour[(old_pos+1):(new_pos)])
+				temp_tour = np.append(temp_tour, sol.tour[old_pos])
+				temp_tour = np.append(temp_tour, sol.tour[(new_pos):])
 
-				for i in range(old_pos-1):
-					temp_tour[i] = sol.tour[i]
-					temp_drivers[i] = sol.drivers[i]
 
-				for i in range(new_pos - old_pos):
-					temp_tour[old_pos + i] = sol.tour[old_pos + i + 1]
-					temp_drivers[old_pos + i] = sol.drivers[old_pos + i + 1]
+				temp_drivers = sol.drivers[:(old_pos)]
+				temp_drivers = np.append(temp_drivers, sol.drivers[(old_pos + 1):(new_pos)])
+				temp_drivers = np.append(temp_drivers, sol.drivers[old_pos])
+				temp_drivers = np.append(temp_drivers, sol.drivers[(new_pos):])
 
-			temp_tour[new_pos] = sol.tour[old_pos]
-			temp_drivers[new_pos] = sol.drivers[old_pos]
-
-			for i in range(size - new_pos):
-				temp_tour[new_pos + i] = sol.tour[new_pos + i]
-				temp_drivers[new_pos + i] = sol.drivers[new_pos + i]
 
 			sol.tour = temp_tour
 			sol.drivers = temp_drivers
-			self.delta_eval(sol, old_pos, new_pos)
+			sol.calc_objective()
+			#self.delta_eval(sol, old_pos, new_pos)
 
 	def move(self, sol, step_function="best_improvement", using_delta_eval=True):
 		if step_function == "random_improvement":
@@ -181,6 +179,36 @@ class OneBlockMove:
 		return False
 
 	def delta_eval(self, sol, old_pos, new_pos):
-		pass
+		squared_error = (sol.obj_val**2)*sol.inst.k
+		driver_distances = np.copy(sol.driver_distances)
+		print("sol: ", sol)
+		print("old_pos: ", old_pos)
+		print("new_pos: ", new_pos)
 
+		#1
+		dr = sol.drivers[old_pos]
+		print("dr: ", dr)
+		squared_error -= driver_distances[dr]**2
+		edge_weight = sol.inst.get_distance(sol.tour[old_pos], sol.tour[(new_pos+1)%sol.inst.n])
+		driver_distances[dr] -= edge_weight
+		squared_error += driver_distances[dr]**2
+
+		#2
+		dr = sol.drivers[(old_pos-1)%sol.inst.n]
+		squared_error -= driver_distances[dr]**2
+		edge_weight = sol.inst.get_distance(sol.tour[(old_pos-1)%sol.inst.n], sol.tour[(old_pos+1)%sol.inst.n])
+		driver_distances[dr] -= edge_weight
+		squared_error += driver_distances[dr]**2
+
+
+
+		#3
+		dr = sol.drivers[(new_pos-1)%sol.inst.n]
+		squared_error -= driver_distances[dr]**2
+		edge_weight = sol.inst.get_distance(sol.tour[(new_pos-1)%sol.inst.n], sol.tour[old_pos])
+		driver_distances[dr] -= edge_weight
+		squared_error += driver_distances[dr]**2
+
+		eval = math.sqrt(squared_error / sol.inst.k)
+		return eval
 
