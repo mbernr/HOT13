@@ -19,7 +19,6 @@ local_search(sol, ns, max_iterations=1, step_function="random_improvement", usin
 
 print(sol)
 print(round(sol.obj_val,2))
-print(round(sol.calc_objective(),2))
 print()
 
 

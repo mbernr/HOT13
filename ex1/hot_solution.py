@@ -52,7 +52,6 @@ class HotSolution(Solution):
 
 	def calc_objective(self):
 		self.calc_driver_distances()
-		print(self.driver_distances)
 		squared_error_per_driver = np.square(self.driver_distances)
 		squared_error = np.sum(squared_error_per_driver)
 		self.obj_val = sqrt((1/self.inst.k)*squared_error)
@@ -64,14 +63,14 @@ class HotSolution(Solution):
 		k = self.inst.k
 		n = self.inst.n
 		L = self.inst.L
-		self.driver_distances = np.full(k, L)
+		self.driver_distances = np.full(k, -L)
 		for i in range(n-1):
 			driver = self.drivers[i]
 			dist = self.inst.get_distance(self.tour[i], self.tour[i+1])
-			self.driver_distances[driver] -= dist
+			self.driver_distances[driver] += dist
 		driver = self.drivers[n-1]
 		dist = self.inst.get_distance(self.tour[n-1], self.tour[0])
-		self.driver_distances[driver] -= dist
+		self.driver_distances[driver] += dist
 
 
 	def initialize(self, k):
