@@ -31,14 +31,15 @@ class HotSolution(Solution):
 		copied_tour = np.copy(self.tour)
 		copied_drivers = np.copy(self.drivers)
 		copied_sol = HotSolution(self.inst, tour=copied_tour, drivers=copied_drivers)
-		copied_sol.calc_objective()
 		return copied_sol
 
 	def copy_from(self, other: 'HotSolution'):
 		self.tour = np.copy(other.tour)
 		self.drivers = np.copy(other.drivers)
 		self.inst = other.inst
-		self.calc_objective()
+		self.obj_val = other.obj_val
+		self.obj_val_valid = other.obj_val_valid
+		self.driver_distances = other.driver_distances
 
 	def __repr__(self): #TODO: nice representation with offset
 		s = ""

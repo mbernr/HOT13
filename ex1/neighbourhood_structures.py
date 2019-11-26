@@ -51,8 +51,8 @@ class TourReversal:
 class DriverOneExchange:
 
 	def apply(self, sol, pos, driver):
-		sol.obj_val = self.delta_eval(sol, pos, driver)
 		sol.drivers[pos] = driver
+		sol.calc_objective()
 
 	def move(self, sol, step_function="best_improvement", using_delta_eval=True):
 		if step_function == "random_improvement":
@@ -62,35 +62,41 @@ class DriverOneExchange:
 			return True
 		else:
 			best_so_far = sol
+			best = {"obj": sol.obj(), "pos": -1, "driver": -1}
 			for pos in range(sol.inst.n):
 				for driver in range(sol.inst.k):
+					if sol.drivers[pos] == driver:
+						continue
 					if using_delta_eval:
-						pass
+						neighbour_obj = self.delta_eval(sol, pos, driver)
 					else:
 						neighbour_solution = sol.copy()
 						self.apply(neighbour_solution, pos,driver)
-						#if neighbour_solution.is_better(best_so_far):
-						if neighbour_solution.calc_objective() < best_so_far.calc_objective():
-							if step_function == "next_improvement":
-								self.apply(sol, pos, driver)
-								return True
-							elif step_function == "best_improvement":
-								best_so_far = neighbour_solution
-			if best_so_far != sol:
-				sol.copy_from(best_so_far)
+						neighbour_obj = neighbour_solution.obj()
+					if neighbour_obj < best["obj"]:
+						if step_function == "next_improvement":
+							self.apply(sol, pos, driver)
+							return True
+						elif step_function == "best_improvement":
+							best["pos"] = pos
+							best["driver"] = driver
+							best["obj"] = neighbour_obj
+			if best["pos"] >= 0 and best["driver"] >= 0:
+				self.apply(sol, best["pos"], best["driver"])
 				return True
 		return False
 
 	def delta_eval(self, sol, pos, new_driver):
+		driver_distances = np.copy(sol.driver_distances)
 		squared_error = (sol.obj_val**2)*sol.inst.k
 		old_driver = sol.drivers[pos]
 		edge_weight = sol.inst.get_distance(sol.tour[pos], sol.tour[(pos+1)%sol.inst.n])
-		squared_error -= sol.driver_distances[old_driver]**2
-		squared_error -= sol.driver_distances[new_driver]**2
-		sol.driver_distances[old_driver] -= edge_weight
-		sol.driver_distances[new_driver] += edge_weight
-		squared_error += sol.driver_distances[old_driver]**2
-		squared_error += sol.driver_distances[new_driver]**2
+		squared_error -= driver_distances[old_driver]**2
+		squared_error -= driver_distances[new_driver]**2
+		driver_distances[old_driver] -= edge_weight
+		driver_distances[new_driver] += edge_weight
+		squared_error += driver_distances[old_driver]**2
+		squared_error += driver_distances[new_driver]**2
 		return math.sqrt(squared_error / sol.inst.k)
 
 
