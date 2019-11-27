@@ -48,6 +48,8 @@ class HotSolution(Solution):
 		s += "\n "
 		for driver in self.drivers:
 			s += str(driver) + " "
+		if self.is_infeasible():
+			s += "\nAbove solution is infeasible."
 		return s
 
 
@@ -102,3 +104,10 @@ class HotSolution(Solution):
 			raise ValueError("Invalid driver in solution")
 
 		super().check()
+
+	def is_infeasible(self):
+		for i in range(self.inst.n):
+			dist = self.inst.get_distance(self.tour[i], self.tour[(i+1)%self.inst.n])
+			if dist >= self.inst.M:
+				return True
+		return False

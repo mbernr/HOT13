@@ -28,7 +28,8 @@ class HotInstance:
 				line = file.readline().strip().split(" ")
 				G.add_edge(int(line[0]), int(line[1]), weight=int(line[2]))
 
-			G = self.add_dummy_edges(G, L, k)
+			M = self.big_M(G, L, k)
+			G = self.add_dummy_edges(G, L, k, M)
 
 		elif first_line == "COORDS":
 
@@ -53,19 +54,21 @@ class HotInstance:
 					distance = custom_round(euclidean_distance(xi,yi,xj,yj))
 					G.add_edge(i, j, weight=distance)
 
+			M = self.big_M(G, L, k)
+
 		self.n = n
 		self.m = G.number_of_edges()
 		self.k = k
 		self.L = L
 		self.G = G
+		self.M = M
 
 
-	def add_dummy_edges(self, G, L, k):
-		M = self.big_M(G, L, k)
+	def add_dummy_edges(self, G, L, k, dummy_weight):
 		for i in range(G.number_of_nodes()):
 			for j in range(i+1, G.number_of_nodes()):
 				if not G.has_edge(i,j):
-					G.add_edge(i, j, weight=M)
+					G.add_edge(i, j, weight=dummy_weight)
 		return G
 
 	def big_M(self, G, L, k):
