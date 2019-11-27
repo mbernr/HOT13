@@ -50,9 +50,3 @@ print(sol)
 print(sol.obj())
 print()
 '''
-
-print("now running with delta")
-local_search(sol1, ns,
-	max_iterations=10,
-	step_function="best_improvement",
-	using_delta_eval=True)
