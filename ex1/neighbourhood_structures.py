@@ -6,10 +6,13 @@ import math
 class TourReversal:
 
 	def apply(self, sol, p1, p2):
-		p1, p2 = min(p1, p2), max(p1, p2)
-		sol.tour = self.reverse_array_section(sol.tour, p1,p2)
-		sol.drivers = self.reverse_array_section(sol.drivers, p1, p2-1)
-		sol.calc_objective()
+		if p1 == p2 or abs(p1-p2) == (sol.inst.n-1):
+			return
+		else:
+			p1, p2 = min(p1, p2), max(p1, p2)
+			sol.tour = self.reverse_array_section(sol.tour, p1,p2)
+			sol.drivers = self.reverse_array_section(sol.drivers, p1, p2-1)
+			sol.calc_objective()
 
 	def move(self, sol, step_function="best_improvement", using_delta_eval=False):
 		if step_function == "random_improvement":
