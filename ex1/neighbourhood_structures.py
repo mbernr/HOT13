@@ -7,7 +7,7 @@ class TourReversal:
 
 	def apply(self, sol, p1, p2):
 		sol.tour = self.reverse_array_section(sol.tour, p1,p2)
-		sol.drivers = self.reverse_array_section(sol.drivers, p1,p2)
+		sol.drivers = self.reverse_array_section(sol.drivers, p1, p2-1)
 		sol.calc_objective()
 
 	def move(self, sol, step_function="best_improvement", using_delta_eval=False):
