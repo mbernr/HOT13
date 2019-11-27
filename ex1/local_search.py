@@ -3,6 +3,9 @@ import time
 
 def local_search(sol, ns, max_iterations=math.inf, max_time=math.inf, step_function="best_improve", using_delta_eval=True):
 	
+	if step_function not in ["best_improvement", "next_improvement", "random_improvement"]:
+		print("Error in local search: Invalid step function.")
+
 	iterations = 0
 	start_time = time.time()
 	
