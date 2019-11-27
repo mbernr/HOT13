@@ -12,16 +12,16 @@ inst = HotInstance("instances/0010_k2.txt")
 ns = TourReversal()
 # ns = OneBlockMove()
 
-'''
+
 
 # test grasp
 
-sol = grasp(inst,ns,using_delta_eval=False, max_iterations=100)
+sol = grasp(inst,ns,using_delta_eval=True, max_iterations=100)
 print(sol)
 print(sol.obj())
 
 print()
-'''
+
 
 
 
@@ -35,12 +35,14 @@ print(sol.obj())
 
 print()
 
-vnd(sol, using_delta_eval=False)
+vnd(sol, using_delta_eval=True)
 print(sol)
 print(sol.obj())
 
 '''
 
+
+'''
 
 # test delta eval
 
@@ -73,4 +75,4 @@ local_search(copy, ns,
 print(copy)
 print(copy.obj())
 print()
-
+'''

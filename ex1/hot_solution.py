@@ -42,7 +42,7 @@ class HotSolution(Solution):
 		self.driver_distances = other.driver_distances
 
 	def __repr__(self): #TODO: nice representation with offset
-		s = ""
+		s = self.inst.name + "\n"
 		for vertex in self.tour:
 			s += str(vertex) + " "
 		s += "\n "

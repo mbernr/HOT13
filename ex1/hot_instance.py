@@ -56,6 +56,7 @@ class HotInstance:
 
 			M = self.big_M(G, L, k)
 
+		self.name = self.get_basename(file_path)
 		self.n = n
 		self.m = G.number_of_edges()
 		self.k = k
@@ -108,3 +109,8 @@ class HotInstance:
 			print("a = b")
 			print("a: ", a, " b: ", b)
 		return self.G.get_edge_data(a,b)["weight"]
+
+	def get_basename(self, file_path):
+		path_array = file_path.split("/")
+		filename_array = path_array[len(path_array)-1].split(".")
+		return filename_array[0]
