@@ -13,6 +13,7 @@ ns = TourReversal()
 # ns = OneBlockMove()
 
 
+'''
 
 # test grasp
 
@@ -22,7 +23,7 @@ print(sol.obj())
 
 print()
 
-
+'''
 
 
 '''
@@ -42,7 +43,7 @@ print(sol.obj())
 '''
 
 
-'''
+
 
 # test delta eval
 
@@ -51,7 +52,7 @@ sol = construct_random_greedy(inst, 1.0)
 # sol = HotSolution(inst, drivers=[0,1,1,0,0,1,1,0,0,1])
 
 print(sol)
-print(sol.obj())
+print(sol.rmse())
 print()
 
 copy = sol.copy()
@@ -63,7 +64,7 @@ local_search(sol, ns,
 	using_delta_eval=False)
 
 print(sol)
-print(sol.obj())
+print(sol.rmse())
 print()
 
 print("with delta")
@@ -73,6 +74,6 @@ local_search(copy, ns,
 	using_delta_eval=True)
 
 print(copy)
-print(copy.obj())
+print(copy.rmse())
 print()
-'''
+

@@ -49,7 +49,7 @@ class TourReversal:
 		else:
 			pos1, pos2 = min(pos1, pos2), max(pos1, pos2)
 
-			squared_error = (sol.obj()**2)*sol.inst.k
+			squared_error = sol.obj()
 			driver_distances = np.copy(sol.driver_distances)
 
 			#1
@@ -64,8 +64,7 @@ class TourReversal:
 			edge_to_add_dist = sol.inst.get_distance(sol.tour[pos1], sol.tour[(pos2+1)%sol.inst.n])
 			squared_error = replace_one_edge(squared_error, driver_distances, dr, edge_to_remove_dist, edge_to_add_dist)
 
-			eval = math.sqrt(squared_error / sol.inst.k)
-			return eval
+			return squared_error
 
 	def reverse_array_section(self, array, p1, p2):
 		i = min(p1, p2)
@@ -117,7 +116,7 @@ class DriverOneExchange:
 		if sol.drivers[pos] == new_driver:
 			return sol.obj()
 		driver_distances = np.copy(sol.driver_distances)
-		squared_error = (sol.obj_val**2)*sol.inst.k
+		squared_error = sol.obj()
 		old_driver = sol.drivers[pos]
 		edge_weight = sol.inst.get_distance(sol.tour[pos], sol.tour[(pos+1)%sol.inst.n])
 		squared_error -= driver_distances[old_driver]**2
@@ -126,7 +125,7 @@ class DriverOneExchange:
 		driver_distances[new_driver] += edge_weight
 		squared_error += driver_distances[old_driver]**2
 		squared_error += driver_distances[new_driver]**2
-		return math.sqrt(squared_error / sol.inst.k)
+		return squared_error
 
 
 class OneBlockMove:
@@ -214,7 +213,7 @@ class OneBlockMove:
 				tr = TourReversal()
 				return tr.delta_eval(sol, old_pos, new_pos)
 			else:
-				squared_error = (sol.obj()**2)*sol.inst.k
+				squared_error = sol.obj()
 				driver_distances = np.copy(sol.driver_distances)
 
 				#1
@@ -235,8 +234,7 @@ class OneBlockMove:
 				edge_to_add_dist = sol.inst.get_distance(sol.tour[(new_pos-1)%sol.inst.n], sol.tour[old_pos])
 				squared_error = replace_one_edge(squared_error, driver_distances, dr, edge_to_remove_dist, edge_to_add_dist)
 
-				eval = math.sqrt(squared_error / sol.inst.k)
-				return eval
+				return squared_error
 
 def replace_one_edge(squared_error, driver_distances, dr, edge_to_remove_dist, edge_to_add_dist):
 	squared_error -= driver_distances[dr]**2

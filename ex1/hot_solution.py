@@ -57,7 +57,7 @@ class HotSolution(Solution):
 		self.calc_driver_distances()
 		squared_error_per_driver = np.square(self.driver_distances)
 		squared_error = np.sum(squared_error_per_driver)
-		self.obj_val = sqrt((1/self.inst.k)*squared_error)
+		self.obj_val = squared_error
 		self.obj_val_valid = True
 		return self.obj_val
 
@@ -74,6 +74,9 @@ class HotSolution(Solution):
 		driver = self.drivers[n-1]
 		dist = self.inst.get_distance(self.tour[n-1], self.tour[0])
 		self.driver_distances[driver] += dist
+
+	def rmse(self):
+		return math.sqrt(self.obj() / self.inst.k)
 
 
 	def initialize(self, k):
