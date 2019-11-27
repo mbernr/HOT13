@@ -33,7 +33,7 @@ class TourReversal:
 						elif step_function == "best_improvement":
 							best["pos1"] = pos1
 							best["pos2"] = pos2
-							best["obj"] = neighbour_obj 
+							best["obj"] = neighbour_obj
 			if best["pos1"] >= 0 and best["pos2"] >= 0:
 				self.apply(sol, best["pos1"], best["pos2"])
 				return True
@@ -82,7 +82,7 @@ class DriverOneExchange:
 						elif step_function == "best_improvement":
 							best["pos"] = pos
 							best["driver"] = driver
-							best["obj"] = neighbour_obj 
+							best["obj"] = neighbour_obj
 			if best["pos"] >= 0 and best["driver"] >= 0:
 				self.apply(sol, best["pos"], best["driver"])
 				return True
@@ -160,23 +160,25 @@ class OneBlockMove:
 			self.apply(sol, old_pos, new_pos)
 			return True
 		else:
-			best_so_far = sol
+			best = {"obj": sol.obj(), "old_pos": -1, "new_pos": -1}
 			for old_pos in range(sol.inst.n):
 				for new_pos in range(sol.inst.n):
 					if using_delta_eval:
-						pass
+						neighbour_obj = self.delta_eval(sol, old_pos, new_pos)
 					else:
 						neighbour_solution = sol.copy()
 						self.apply(neighbour_solution, old_pos, new_pos)
-						#if neighbour_solution.is_better(best_so_far):
-						if neighbour_solution.calc_objective() < best_so_far.calc_objective():
-							if step_function == "next_improvement":
-								self.apply(sol, old_pos, new_pos)
-								return True
-							elif step_function == "best_improvement":
-								best_so_far = neighbour_solution
-			if best_so_far != sol:
-				sol.copy_from(best_so_far)
+						neighbour_obj = neighbour_solution.obj()
+					if neighbour_obj < best["obj"]:
+						if step_function == "next_improvement":
+							self.apply(sol, old_pos, new_pos)
+							return True
+						elif step_function == "best_improvement":
+							best["obj"] = neighbour_obj
+							best["old_pos"] = old_pos
+							best["new_pos"] = new_pos
+			if best["old_pos"] >=0 and best["new_pos"] >= 0:
+				self.apply(sol, best["old_pos"], best["new_pos"])
 				return True
 		return False
 
@@ -189,28 +191,28 @@ class OneBlockMove:
 
 		#1
 		dr = sol.drivers[old_pos]
-		print("dr: ", dr)
-		squared_error -= driver_distances[dr]**2
-		edge_weight = sol.inst.get_distance(sol.tour[old_pos], sol.tour[(new_pos+1)%sol.inst.n])
-		driver_distances[dr] -= edge_weight
-		squared_error += driver_distances[dr]**2
+		edge_to_remove_dist = sol.inst.get_distance(sol.tour[old_pos], sol.tour[(old_pos+1)%sol.inst.n])
+		edge_to_add_dist = sol.inst.get_distance(sol.tour[old_pos], sol.tour[new_pos])
+		squared error = replace_one_edge(squared_error, driver_distances, dr, edge_to_remove_dist, edge_to_add_dist)
 
 		#2
 		dr = sol.drivers[(old_pos-1)%sol.inst.n]
-		squared_error -= driver_distances[dr]**2
-		edge_weight = sol.inst.get_distance(sol.tour[(old_pos-1)%sol.inst.n], sol.tour[(old_pos+1)%sol.inst.n])
-		driver_distances[dr] -= edge_weight
-		squared_error += driver_distances[dr]**2
-
-
+		edge_to_remove_dist = sol.inst.get_distance(sol.tour[(old_pos-1)%sol.inst.n], sol.tour[old_pos])
+		edge_to_add_dist = sol.inst.get_distance(sol.tour[(old_pos-1)%sol.inst.n], sol.tour[(old_pos+1)%sol.inst.n])
+		squared error = replace_one_edge(squared_error, driver_distances, dr, edge_to_remove_dist, edge_to_add_dist)
 
 		#3
 		dr = sol.drivers[(new_pos-1)%sol.inst.n]
-		squared_error -= driver_distances[dr]**2
-		edge_weight = sol.inst.get_distance(sol.tour[(new_pos-1)%sol.inst.n], sol.tour[old_pos])
-		driver_distances[dr] -= edge_weight
-		squared_error += driver_distances[dr]**2
+		edge_to_remove_dist = sol.inst.get_distance(sol.tour[(new_pos-1)%sol.inst.n]], sol.tour[new_pos])
+		edge_to_add_dist = sol.inst.get_distance(sol.tour[(new_pos-1)%sol.inst.n], sol.tour[old_pos])
+		squared error = replace_one_edge(squared_error, driver_distances, dr, edge_to_remove_dist, edge_to_add_dist)
 
 		eval = math.sqrt(squared_error / sol.inst.k)
 		return eval
 
+	def replace_one_edge(squared_error, driver_distances, dr, edge_to_remove_dist, edge_to_add_dist):
+		squared_error -= driver_distances[dr]**2
+		driver_distances[dr] -= edge_to_remove_dist
+		driver_distances[dr] += edge_to_add_dist
+		squared_error += driver_distances[dr]**2
+		return squared error
