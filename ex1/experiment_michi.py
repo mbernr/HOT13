@@ -9,8 +9,8 @@ from vnd import *
 
 inst = HotInstance("instances/0010_k2.txt")
 # ns = DriverOneExchange()
-# ns = TourReversal()
-ns = OneBlockMove()
+ns = TourReversal()
+# ns = OneBlockMove()
 
 '''
 

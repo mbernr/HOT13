@@ -21,23 +21,14 @@ class TourReversal:
 			best = {"obj": sol.obj(), "pos1": -1, "pos2": -1}
 			for pos1 in range(sol.inst.n):
 				for pos2 in range(pos1+1, sol.inst.n):
+					if pos1 == pos2 or abs(pos1-pos2) == (sol.inst.n-1):
+						continue
 					if using_delta_eval:
 						neighbour_obj = self.delta_eval(sol, pos1, pos2)
 					else:
 						neighbour_solution = sol.copy()
 						self.apply(neighbour_solution, pos1,pos2)
 						neighbour_obj = neighbour_solution.obj()
-						neighbour_obj_delta = self.delta_eval(sol, pos1, pos2)
-						if round(neighbour_obj, 2) != round(neighbour_obj_delta,2):
-							print("----------RED ALARM---------------")
-							print("pos1: ", pos1)
-							print("pos2: ", pos2)
-							print("neighbour_obj: ", neighbour_obj)
-							print("neighbour_obj_delta: ", neighbour_obj_delta)
-						#else:
-							#print("good boy")
-							#print("pos1: ", pos1)
-							#print("pos2: ", pos2)
 					if neighbour_obj < best["obj"]:
 						if step_function == "next_improvement":
 							self.apply(sol, pos1, pos2)
@@ -60,9 +51,6 @@ class TourReversal:
 
 			squared_error = (sol.obj()**2)*sol.inst.k
 			driver_distances = np.copy(sol.driver_distances)
-			#print("sol: ", sol)
-			#print("pos1: ", pos1)
-			#print("pos2: ", pos2)
 
 			#1
 			dr = sol.drivers[(pos1-1)%sol.inst.n]
@@ -70,13 +58,11 @@ class TourReversal:
 			edge_to_add_dist = sol.inst.get_distance(sol.tour[(pos1-1)%sol.inst.n], sol.tour[pos2])
 			squared_error = replace_one_edge(squared_error, driver_distances, dr, edge_to_remove_dist, edge_to_add_dist)
 
-
 			#2
 			dr = sol.drivers[pos2]
 			edge_to_remove_dist = sol.inst.get_distance(sol.tour[pos2], sol.tour[(pos2+1)%sol.inst.n])
 			edge_to_add_dist = sol.inst.get_distance(sol.tour[pos1], sol.tour[(pos2+1)%sol.inst.n])
 			squared_error = replace_one_edge(squared_error, driver_distances, dr, edge_to_remove_dist, edge_to_add_dist)
-
 
 			eval = math.sqrt(squared_error / sol.inst.k)
 			return eval
@@ -128,6 +114,8 @@ class DriverOneExchange:
 		return False
 
 	def delta_eval(self, sol, pos, new_driver):
+		if sol.drivers[pos] == new_driver:
+			return sol.obj()
 		driver_distances = np.copy(sol.driver_distances)
 		squared_error = (sol.obj_val**2)*sol.inst.k
 		old_driver = sol.drivers[pos]
@@ -147,59 +135,43 @@ class OneBlockMove:
 	def apply(self, sol, old_pos, new_pos):
 		if old_pos == new_pos or  abs(old_pos - new_pos) == (sol.inst.n-1):
 			pass
-			#print("old_pos and new_pos are the same")
 		elif abs(old_pos - new_pos) == 1:
 			tr = TourReversal()
 			tr.apply(sol, old_pos, new_pos)
 		else:
 			if old_pos > new_pos:
-				#print("new<old")
-				#print("old_pos: ", old_pos)
-				#print("new_pos: ", new_pos)
 				size = len(sol.tour)
 
 				temp_tour = sol.tour[:new_pos]
-				#print(temp_tour)
 				temp_tour = np.append(temp_tour, sol.tour[old_pos])
-				#print(temp_tour)
 				temp_tour = np.append(temp_tour, sol.tour[(new_pos):(old_pos)])
-				#print(temp_tour)
 				if old_pos!=size:
 					temp_tour = np.append(temp_tour, sol.tour[(old_pos + 1):])
-					#print(temp_tour)
 
 				temp_drivers = sol.drivers[:new_pos]
 				temp_drivers = np.append(temp_drivers, sol.drivers[old_pos])
 				temp_drivers = np.append(temp_drivers, sol.drivers[(new_pos):(old_pos)])
 				temp_drivers = np.append(temp_drivers, sol.drivers[(old_pos + 1):])
-				#print(temp_drivers)
-				#print()
 
 
 			if old_pos < new_pos:
-				#print("old<new")
-				#print("old_pos: ", old_pos)
-				#print("new_pos: ", new_pos)
 				size = len(sol.tour)
+
 				temp_tour = np.empty(0, int)
 				if (old_pos>0):
 					temp_tour = sol.tour[:(old_pos)]
 				temp_tour = np.append(temp_tour, sol.tour[(old_pos+1):(new_pos)])
 				temp_tour = np.append(temp_tour, sol.tour[old_pos])
 				temp_tour = np.append(temp_tour, sol.tour[(new_pos):])
-				#print(temp_tour)
 
 				temp_drivers = sol.drivers[:(old_pos)]
 				temp_drivers = np.append(temp_drivers, sol.drivers[(old_pos + 1):(new_pos)])
 				temp_drivers = np.append(temp_drivers, sol.drivers[old_pos])
 				temp_drivers = np.append(temp_drivers, sol.drivers[(new_pos):])
-				#print(temp_drivers)
-				#print()
 
 			sol.tour = temp_tour
 			sol.drivers = temp_drivers
 			sol.calc_objective()
-			#self.delta_eval(sol, old_pos, new_pos)
 
 	def move(self, sol, step_function="best_improvement", using_delta_eval=True):
 
@@ -212,30 +184,22 @@ class OneBlockMove:
 			best = {"obj": sol.obj(), "old_pos": -1, "new_pos": -1}
 			for old_pos in range(sol.inst.n):
 				for new_pos in range(sol.inst.n):
-					if old_pos != new_pos:
-						if using_delta_eval:
-							neighbour_obj = self.delta_eval(sol, old_pos, new_pos)
-						else:
-							neighbour_solution = sol.copy()
-							self.apply(neighbour_solution, old_pos, new_pos)
-							neighbour_obj = neighbour_solution.obj()
-							neighbour_obj_delta = self.delta_eval(sol, old_pos, new_pos)
-							if round(neighbour_obj, 2) != round(neighbour_obj_delta,2):
-								print("RED ALARM")
-								print("old_pos: ", old_pos)
-								print("new_pos: ", new_pos)
-								print("neighbour_obj: ", neighbour_obj)
-								print("neighbour_obj_delta: ", neighbour_obj_delta)
-								print()
-
-						if neighbour_obj < best["obj"]:
-							if step_function == "next_improvement":
-								self.apply(sol, old_pos, new_pos)
-								return True
-							elif step_function == "best_improvement":
-								best["obj"] = neighbour_obj
-								best["old_pos"] = old_pos
-								best["new_pos"] = new_pos
+					if old_pos == new_pos or  abs(old_pos - new_pos) == (sol.inst.n-1):
+						continue
+					if using_delta_eval:
+						neighbour_obj = self.delta_eval(sol, old_pos, new_pos)
+					else:
+						neighbour_solution = sol.copy()
+						self.apply(neighbour_solution, old_pos, new_pos)
+						neighbour_obj = neighbour_solution.obj()
+					if neighbour_obj < best["obj"]:
+						if step_function == "next_improvement":
+							self.apply(sol, old_pos, new_pos)
+							return True
+						elif step_function == "best_improvement":
+							best["obj"] = neighbour_obj
+							best["old_pos"] = old_pos
+							best["new_pos"] = new_pos
 			if best["old_pos"] >=0 and best["new_pos"] >= 0:
 				self.apply(sol, best["old_pos"], best["new_pos"])
 				return True
