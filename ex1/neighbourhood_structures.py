@@ -8,6 +8,7 @@ class TourReversal:
 	def apply(self, sol, p1, p2):
 		sol.tour = self.reverse_array_section(sol.tour, p1,p2)
 		sol.drivers = self.reverse_array_section(sol.drivers, p1,p2)
+		sol.calc_objective()
 
 	def move(self, sol, step_function="best_improvement", using_delta_eval=False):
 		if step_function == "random_improvement":
@@ -16,23 +17,25 @@ class TourReversal:
 			self.apply(sol, pos1, pos2)
 			return True
 		else:
-			best_so_far = sol
+			best = {"obj": sol.obj(), "pos1": -1, "pos2": -1}
 			for pos1 in range(sol.inst.n):
 				for pos2 in range(pos1+1, sol.inst.n):
 					if using_delta_eval:
-						pass
+						neighbour_obj = self.delta_eval(sol, pos1, pos2)
 					else:
 						neighbour_solution = sol.copy()
-						self.apply(neighbour_solution, pos1, pos2)
-						#if neighbour_solution.is_better(best_so_far):
-						if neighbour_solution.calc_objective() < best_so_far.calc_objective():
-							if step_function == "next_improvement":
-								self.apply(sol, pos1, pos2)
-								return True
-							elif step_function == "best_improvement":
-								best_so_far = neighbour_solution
-			if best_so_far != sol:
-				sol.copy_from(best_so_far)
+						self.apply(neighbour_solution, pos1,pos2)
+						neighbour_obj = neighbour_solution.obj()
+					if neighbour_obj < best["obj"]:
+						if step_function == "next_improvement":
+							self.apply(sol, pos1, pos2)
+							return True
+						elif step_function == "best_improvement":
+							best["pos1"] = pos1
+							best["pos2"] = pos2
+							best["obj"] = neighbour_obj 
+			if best["pos1"] >= 0 and best["pos2"] >= 0:
+				self.apply(sol, best["pos1"], best["pos2"])
 				return True
 		return False
 
@@ -61,7 +64,6 @@ class DriverOneExchange:
 			self.apply(sol, pos, driver)
 			return True
 		else:
-			best_so_far = sol
 			best = {"obj": sol.obj(), "pos": -1, "driver": -1}
 			for pos in range(sol.inst.n):
 				for driver in range(sol.inst.k):
@@ -80,7 +82,7 @@ class DriverOneExchange:
 						elif step_function == "best_improvement":
 							best["pos"] = pos
 							best["driver"] = driver
-							best["obj"] = neighbour_obj
+							best["obj"] = neighbour_obj 
 			if best["pos"] >= 0 and best["driver"] >= 0:
 				self.apply(sol, best["pos"], best["driver"])
 				return True
