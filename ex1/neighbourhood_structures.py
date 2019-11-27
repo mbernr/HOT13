@@ -6,6 +6,7 @@ import math
 class TourReversal:
 
 	def apply(self, sol, p1, p2):
+		p1, p2 = min(p1, p2), max(p1, p2)
 		sol.tour = self.reverse_array_section(sol.tour, p1,p2)
 		sol.drivers = self.reverse_array_section(sol.drivers, p1, p2-1)
 		sol.calc_objective()
@@ -26,6 +27,17 @@ class TourReversal:
 						neighbour_solution = sol.copy()
 						self.apply(neighbour_solution, pos1,pos2)
 						neighbour_obj = neighbour_solution.obj()
+						neighbour_obj_delta = self.delta_eval(sol, pos1, pos2)
+						if round(neighbour_obj, 2) != round(neighbour_obj_delta,2):
+							print("----------RED ALARM---------------")
+							print("pos1: ", pos1)
+							print("pos2: ", pos2)
+							print("neighbour_obj: ", neighbour_obj)
+							print("neighbour_obj_delta: ", neighbour_obj_delta)
+						#else:
+							#print("good boy")
+							#print("pos1: ", pos1)
+							#print("pos2: ", pos2)
 					if neighbour_obj < best["obj"]:
 						if step_function == "next_improvement":
 							self.apply(sol, pos1, pos2)
@@ -133,9 +145,12 @@ class OneBlockMove:
 
 	#moves a block from old position to new position. Everything else gets swifted accordingly to make room for it
 	def apply(self, sol, old_pos, new_pos):
-		if old_pos == new_pos:
+		if old_pos == new_pos or  abs(old_pos - new_pos) == (sol.inst.n-1):
 			pass
 			#print("old_pos and new_pos are the same")
+		elif abs(old_pos - new_pos) == 1:
+			tr = TourReversal()
+			tr.apply(sol, old_pos, new_pos)
 		else:
 			if old_pos > new_pos:
 				#print("new<old")
@@ -187,6 +202,7 @@ class OneBlockMove:
 			#self.delta_eval(sol, old_pos, new_pos)
 
 	def move(self, sol, step_function="best_improvement", using_delta_eval=True):
+
 		if step_function == "random_improvement":
 			old_pos = random.randint(0, sol.inst.n-1)
 			new_pos = random.randint(0, sol.inst.n-1)
@@ -203,6 +219,15 @@ class OneBlockMove:
 							neighbour_solution = sol.copy()
 							self.apply(neighbour_solution, old_pos, new_pos)
 							neighbour_obj = neighbour_solution.obj()
+							neighbour_obj_delta = self.delta_eval(sol, old_pos, new_pos)
+							if round(neighbour_obj, 2) != round(neighbour_obj_delta,2):
+								print("RED ALARM")
+								print("old_pos: ", old_pos)
+								print("new_pos: ", new_pos)
+								print("neighbour_obj: ", neighbour_obj)
+								print("neighbour_obj_delta: ", neighbour_obj_delta)
+								print()
+
 						if neighbour_obj < best["obj"]:
 							if step_function == "next_improvement":
 								self.apply(sol, old_pos, new_pos)
