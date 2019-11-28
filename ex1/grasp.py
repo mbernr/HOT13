@@ -15,6 +15,9 @@ def grasp(inst, ns, alpha=0.25, max_iterations=1000, max_time=15*60, max_iterati
 
 		sol = construct_random_greedy(inst, alpha)
 
+		if time.clock()-start_time > max_time:
+			break
+
 		local_search(sol, ns,
 			max_iterations=max_iterations_local_search,
 			max_time=max_time_local_search,
