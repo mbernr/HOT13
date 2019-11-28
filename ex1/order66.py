@@ -150,7 +150,6 @@ for inst_name in inst_list1:
 
 
 	#----------------LOCAL SEARCH----------------------
-	starting_time = time.process_time()
 	nsa = [TourReversal(), OneBlockMove(), DriverOneExchange()]
 	sfa = ["best_improvement", "next_improvement", "random"]
 	max_iterations = 100
@@ -158,6 +157,7 @@ for inst_name in inst_list1:
 
 	for i in range(len(nsa)):
 		for sf in sfa:
+			starting_time = time.process_time()
 			sol.copy_from(det_sol)
 			local_search(sol, nsa[i], max_iterations=max_iterations, max_time=max_time, step_function=sf, using_delta_eval=True)
 
@@ -173,6 +173,16 @@ for inst_name in inst_list1:
 			running_time = time.process_time() - starting_time
 
 			store_results(sol_file_path, res_file_path, inst_name, sol, running_time)
+
+			if sf == "best_improvement":
+				starting_time = time.process_time()
+
+				local_search(sol, nsa[i], max_iterations=max_iterations, max_time=max_time, step_function=sf, using_delta_eval=False)
+
+				sol_file_path = "solutions/local_search/" + ns_name + "_" + sf + "_"
+				delta_res_file_path = "results/local_search_delta_"+ ns_name + "_" + sf + ".txt"
+				store_results(sol_file_path, delta_res_file_path, inst_name, sol, running_time)
+
 
 	#------------------------GRASP--------------------------
 	starting_time = time.process_time()
@@ -221,6 +231,10 @@ for inst_name in inst_list1:
 	running_time = time.process_time() - starting_time
 
 	store_results(sol_file_path, res_file_path, inst_name, sol, running_time)
+
+	#----------------------------LOCALSEARCH NO DELTA---------------------------------
+
+
 
 
 	#--------------ALL DONE----------------------
