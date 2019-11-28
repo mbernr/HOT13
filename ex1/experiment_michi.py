@@ -10,7 +10,7 @@ import time
 start_time = time.time()
 
 
-inst = HotInstance("instances/3000_k2.txt")
+inst = HotInstance("instances/0010_k2.txt")
 # ns = DriverOneExchange()
 # ns = TourReversal()
 # ns = OneBlockMove()
