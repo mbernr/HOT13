@@ -18,7 +18,7 @@ nsa = [TourReversal(), OneBlockMove(), DriverOneExchange()]
 multiplier = 1  #variable to play around with temperature
 alpha = 0.95
 max_iterations = 100000
-max_time = 15
+max_time = 10
 #----------------------------------------------------
 
 sol = construct_greedy(inst)
