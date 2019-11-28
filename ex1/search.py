@@ -84,6 +84,9 @@ def simulated_annealing(sol, nsa, T, alpha = 0.95, max_iterations=100000, max_ti
 			t += 1
 			eq_condition += 1
 
+			if time.clock()-start_time > max_time:
+				break
+
 		eq_condition = 0
 		geometric_cooling(T, alpha)
 

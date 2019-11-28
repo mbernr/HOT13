@@ -51,7 +51,7 @@ class HotInstance:
 				for j in range(i+1, n):
 					xj = G.nodes[j]["x"]
 					yj = G.nodes[j]["y"]
-					distance = custom_round(euclidean_distance(xi,yi,xj,yj))
+					distance = self.custom_round(self.euclidean_distance(xi,yi,xj,yj))
 					G.add_edge(i, j, weight=distance)
 
 			M = self.big_M(G, L, k)
