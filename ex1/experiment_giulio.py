@@ -2,10 +2,9 @@ from hot_instance import *
 from hot_solution import *
 from construction_heuristics import *
 from neighbourhood_structures import *
-from local_search import *
+from search import *
 from grasp import *
-from vnd import *
-from simulated_annealing import *
+
 
 
 inst = HotInstance("instances/0010_k2.txt")

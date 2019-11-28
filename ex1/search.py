@@ -10,11 +10,11 @@ def local_search(sol, ns, max_iterations=math.inf, max_time=math.inf, step_funct
 		print("Error in local search: Invalid step function.")
 	best_solution = sol.copy()
 	iterations = 0
-	start_time = time.clock()
+	start_time = time.process_time()
 
 	while ns.move(sol, step_function=step_function, using_delta_eval=using_delta_eval):
 		if step_function == "random":
-			if sol.obj() < best_solution.obj()
+			if sol.obj() < best_solution.obj():
 				best_solution.best_from(sol)
 		# checking if max number of iterations is exceeded
 		iterations += 1
@@ -22,7 +22,7 @@ def local_search(sol, ns, max_iterations=math.inf, max_time=math.inf, step_funct
 			break
 
 		# checking if max time is exceeded
-		if time.clock()-start_time > max_time:
+		if time.process_time()-start_time > max_time:
 			break
 
 	if step_function == "random":
@@ -35,7 +35,7 @@ def vnd(sol, max_iterations=1000, max_time=15*60, step_function="best_improvemen
 		print("Error in vnd: Invalid step function.")
 
 	iterations = 0
-	start_time = time.clock()
+	start_time = time.process_time()
 
 	ns = [TourReversal(), OneBlockMove(), DriverOneExchange()]
 	i = 0 # index of current neighbourhood
@@ -51,7 +51,7 @@ def vnd(sol, max_iterations=1000, max_time=15*60, step_function="best_improvemen
 		if iterations >= max_iterations:
 			break
 
-		if time.clock()-start_time > max_time:
+		if time.process_time()-start_time > max_time:
 			break
 
 def simulated_annealing(sol, nsa, T, alpha = 0.95, max_iterations=100000, max_time=15*60):
@@ -63,7 +63,7 @@ def simulated_annealing(sol, nsa, T, alpha = 0.95, max_iterations=100000, max_ti
 		max_iterations
 		max_time
 	'''
-	starting_time = time.clock()
+	starting_time = time.process_time()
 	t = 0
 	stopping_crit = False
 	eq_condition = 0
@@ -95,8 +95,8 @@ def simulated_annealing(sol, nsa, T, alpha = 0.95, max_iterations=100000, max_ti
 		if max_iterations < t:
 			stopping_crit = True
 			print("max interations reached")
-			print("CPU current time: ", time.clock()-starting_time)
-		if time.clock()-starting_time > max_time:
+			print("CPU current time: ", time.process_time()-starting_time)
+		if time.process_time()-starting_time > max_time:
 			stopping_crit = True
 			print("timeout reached")
 			print("iterations done: ", t)

@@ -6,7 +6,7 @@ from search import *
 def grasp(inst, ns, alpha=0.25, max_iterations=1000, max_time=15*60, max_iterations_local_search=math.inf, max_time_local_search=60, step_function="best_improvement", using_delta_eval=True):
 
 	iterations = 0
-	start_time = time.clock()
+	start_time = time.process_time()
 
 	best_sol = None
 	best_obj = math.inf
@@ -29,7 +29,7 @@ def grasp(inst, ns, alpha=0.25, max_iterations=1000, max_time=15*60, max_iterati
 		if iterations >= max_iterations:
 			break
 
-		if time.clock()-start_time > max_time:
+		if time.process_time()-start_time > max_time:
 			break
 
 	return best_sol

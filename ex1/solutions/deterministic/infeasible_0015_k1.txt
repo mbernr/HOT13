@@ -1,0 +1,4 @@
+0015_k1
+0 1 2 11 3 9 4 13 5 7 8 10 12 6 14 
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+Above solution is infeasible.
