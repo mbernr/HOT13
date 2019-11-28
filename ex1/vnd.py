@@ -9,10 +9,10 @@ def vnd(sol, max_iterations=1000, max_time=15*60, step_function="best_improvemen
 		print("Error in vnd: Invalid step function.")
 
 	iterations = 0
-	start_time = time.time()
+	start_time = time.clock()
 
 	ns = [TourReversal(), OneBlockMove(), DriverOneExchange()]
-	i = 0 # index of current neighbourhood 
+	i = 0 # index of current neighbourhood
 
 	while(i < len(ns)):
 
@@ -25,6 +25,6 @@ def vnd(sol, max_iterations=1000, max_time=15*60, step_function="best_improvemen
 		if iterations >= max_iterations:
 			break
 
-		if time.time()-start_time > max_time:
+		if time.clock()-start_time > max_time:
 			break
 

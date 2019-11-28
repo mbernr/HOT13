@@ -4,7 +4,7 @@ import time
 import math
 
 
-def simulated_annealing(sol, nsa, T, alpha = 0.95, max_iterations=1000, max_time=15*60):
+def simulated_annealing(sol, nsa, T, alpha = 0.95, max_iterations=100000, max_time=15*60):
 	'''
 		sol = initial solution
 		ns = neighbourhood structure array
@@ -13,7 +13,7 @@ def simulated_annealing(sol, nsa, T, alpha = 0.95, max_iterations=1000, max_time
 		max_iterations
 		max_time
 	'''
-	starting_time = time.time()
+	starting_time = time.clock()
 	t = 0
 	stopping_crit = False
 	eq_condition = 0
@@ -45,8 +45,8 @@ def simulated_annealing(sol, nsa, T, alpha = 0.95, max_iterations=1000, max_time
 		if max_iterations < t:
 			stopping_crit = True
 			print("max interations reached")
-			print("current time: ", time.time()-starting_time)
-		if time.time()-starting_time > max_time:
+			print("CPU current time: ", time.clock()-starting_time)
+		if time.clock()-starting_time > max_time:
 			stopping_crit = True
 			print("timeout reached")
 			print("iterations done: ", t)
