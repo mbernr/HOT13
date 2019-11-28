@@ -1,6 +1,7 @@
 import time
 import glob
 import os
+import webbrowser
 
 from hot_instance import *
 from hot_solution import *
@@ -36,6 +37,8 @@ def store_results(sol_file_path, res_file_path, inst_name, sol, running_time, av
 	result_file.close()
 
 print("lets go")
+
+webbrowser.open('https://www.youtube.com/watch?v=sNjWpZmxDgg')
 
 inst_list = ['0015_k2.txt',
 			'a280_k5_2.txt',
