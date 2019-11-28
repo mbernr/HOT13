@@ -109,6 +109,10 @@ empty_folder("solutions/simulated_annealing/*")
 print("the Jedi are dead")
 
 
+max_time = 5 #TODO CHANGE BEFORE RUN
+max_iterations = 1000000
+print("max_time: ", max_time, " max_iterations: ", max_iterations)
+
 for inst_name in inst_list1:
 	inst_path = "instances/" + inst_name
 	inst = HotInstance(inst_path)
@@ -152,8 +156,7 @@ for inst_name in inst_list1:
 	#----------------LOCAL SEARCH----------------------
 	nsa = [TourReversal(), OneBlockMove(), DriverOneExchange()]
 	sfa = ["best_improvement", "next_improvement", "random"]
-	max_iterations = 100
-	max_time = 5
+
 
 	for i in range(len(nsa)):
 		for sf in sfa:
@@ -189,8 +192,8 @@ for inst_name in inst_list1:
 
 	sol.copy_from(det_sol)
 	ns = TourReversal() #TODO change to the best
-	#TODO chane max_iterations and time
-	sol = grasp(inst, ns, max_iterations = 100)
+
+	sol = grasp(inst, ns, max_iterations=max_iterations, max_time=max_time)
 
 	sol_file_path = "solutions/grasp/"
 	res_file_path = "results/grasp.txt"
@@ -209,12 +212,11 @@ for inst_name in inst_list1:
 		starting_time = time.process_time()
 
 		sol.copy_from(det_sol)
-		#TODO change max_iterations and time
-		max_iterations = 100
-		vnd(sol, used_ns_structures, max_iterations = max_iterations,  using_delta_eval=True)
 
-		sol_file_path = "solutions/vnd/" 
-		res_file_path = "results/vnd.txt"
+		vnd(sol, used_ns_structures, max_iterations = max_iterations,  max_time=max_time, using_delta_eval=True)
+
+		sol_file_path = "solutions/vnd/" + str(ns_orders) + "_"
+		res_file_path = "results/vnd_" + str(ns_orders) + ".txt"
 		running_time = time.process_time() - starting_time
 
 		store_results(sol_file_path, res_file_path, inst_name, sol, running_time)
@@ -227,8 +229,7 @@ for inst_name in inst_list1:
 	nsa = [TourReversal(), OneBlockMove(), DriverOneExchange()]
 	multiplier = 1  #variable to play around with temperature
 	alpha = 0.95
-	max_iterations = 10000
-	max_time = 5
+
 	T = sol.inst.M * sol.inst.k * multiplier #temperature
 
 	simulated_annealing(sol, nsa, T, alpha=alpha, max_iterations=max_iterations, max_time=max_time)
@@ -238,11 +239,6 @@ for inst_name in inst_list1:
 	running_time = time.process_time() - starting_time
 
 	store_results(sol_file_path, res_file_path, inst_name, sol, running_time)
-
-	#----------------------------LOCALSEARCH NO DELTA---------------------------------
-
-
-
 
 	#--------------ALL DONE----------------------
 	print(inst_name, ": all done")
