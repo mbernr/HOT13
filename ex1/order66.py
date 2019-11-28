@@ -89,7 +89,9 @@ inst_list = ['0015_k2.txt',
 			'berlin52_k5_1.txt',
 			'berlin52_k2_2.txt',
 			'rl5915_k3_1.txt',
-			'rl5915_k1_1.txt'].sort()
+			'rl5915_k1_1.txt']
+
+inst_list.sort()
 
 inst_list1= ['0010_k1.txt','0010_k2.txt','0015_k1.txt']
 
