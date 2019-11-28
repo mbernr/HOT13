@@ -15,7 +15,7 @@ class TourReversal:
 			sol.calc_objective()
 
 	def move(self, sol, step_function="best_improvement", using_delta_eval=False):
-		if step_function == "random_improvement":
+		if step_function == "random":
 			pos1 = random.randint(0,sol.inst.n-1)
 			pos2 = random.randint(0,sol.inst.n-1)
 			self.apply(sol, pos1, pos2)
@@ -85,7 +85,7 @@ class DriverOneExchange:
 		sol.calc_objective()
 
 	def move(self, sol, step_function="best_improvement", using_delta_eval=True):
-		if step_function == "random_improvement":
+		if step_function == "random":
 			pos = random.randint(0, sol.inst.n-1)
 			driver = random.randint(0, sol.inst.k-1)
 			self.apply(sol, pos, driver)
@@ -177,7 +177,7 @@ class OneBlockMove:
 
 	def move(self, sol, step_function="best_improvement", using_delta_eval=True):
 
-		if step_function == "random_improvement":
+		if step_function == "random":
 			old_pos = random.randint(0, sol.inst.n-1)
 			new_pos = random.randint(0, sol.inst.n-1)
 			self.apply(sol, old_pos, new_pos)
