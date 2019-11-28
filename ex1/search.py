@@ -4,7 +4,7 @@ import time
 import math
 
 
-def local_search(sol, ns, max_iterations=math.inf, max_time=math.inf, step_function="best_improve", using_delta_eval=True):
+def local_search(sol, ns, max_iterations=math.inf, max_time=math.inf, step_function="best_improvement", using_delta_eval=True):
 
 	if step_function not in ["best_improvement", "next_improvement", "random"]:
 		print("Error in local search: Invalid step function.")
@@ -15,7 +15,7 @@ def local_search(sol, ns, max_iterations=math.inf, max_time=math.inf, step_funct
 	while ns.move(sol, step_function=step_function, using_delta_eval=using_delta_eval):
 		if step_function == "random":
 			if sol.obj() < best_solution.obj():
-				best_solution.best_from(sol)
+				best_solution.copy_from(sol)
 		# checking if max number of iterations is exceeded
 		iterations += 1
 		if iterations >= max_iterations:
@@ -54,7 +54,7 @@ def vnd(sol, max_iterations=1000, max_time=15*60, step_function="best_improvemen
 		if time.process_time()-start_time > max_time:
 			break
 
-def simulated_annealing(sol, nsa, T, alpha = 0.95, max_iterations=100000, max_time=15*60):
+def simulated_annealing(sol, nsa, T, alpha = 0.95, max_iterations=10000000, max_time=15*60):
 	'''
 		sol = initial solution
 		ns = neighbourhood structure array
@@ -89,7 +89,7 @@ def simulated_annealing(sol, nsa, T, alpha = 0.95, max_iterations=100000, max_ti
 			t += 1
 			eq_condition += 1
 
-			if time.clock()-start_time > max_time:
+			if time.clock()-starting_time > max_time:
 				break
 
 		eq_condition = 0
@@ -97,12 +97,9 @@ def simulated_annealing(sol, nsa, T, alpha = 0.95, max_iterations=100000, max_ti
 
 		if max_iterations < t:
 			stopping_crit = True
-			print("max interations reached")
-			print("CPU current time: ", time.process_time()-starting_time)
+
 		if time.process_time()-starting_time > max_time:
 			stopping_crit = True
-			print("timeout reached")
-			print("iterations done: ", t)
 
 	sol.copy_from(curr_sol)
 
