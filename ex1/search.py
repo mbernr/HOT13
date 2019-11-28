@@ -29,7 +29,7 @@ def local_search(sol, ns, max_iterations=math.inf, max_time=math.inf, step_funct
 		sol.copy_from(best_solution)
 
 
-def vnd(sol, max_iterations=1000, max_time=15*60, step_function="best_improvement", using_delta_eval=True):
+def vnd(sol, ns, max_iterations=1000, max_time=15*60, step_function="best_improvement", using_delta_eval=True):
 
 	if step_function not in ["best_improvement", "next_improvement", "random"]:
 		print("Error in vnd: Invalid step function.")
@@ -37,7 +37,6 @@ def vnd(sol, max_iterations=1000, max_time=15*60, step_function="best_improvemen
 	iterations = 0
 	start_time = time.process_time()
 
-	ns = [TourReversal(), OneBlockMove(), DriverOneExchange()]
 	i = 0 # index of current neighbourhood
 
 	while(i < len(ns)):
