@@ -30,9 +30,12 @@ def cost_of_adding_vertex(inst, new_vertex, tour, tour_distance):
 # Possible problem: Can overshoot by 50%. Fix?
 # - if overshoot, then return cost + L
 # - or: sort edges by weight, insert greedily
-def cost_of_adding_driver(inst, new_driver, pos, driver_dist):
-	d = inst.get_distance(pos,(pos+1)%inst.n)
-	return abs(inst.L - (driver_dist + d))
+def cost_of_adding_driver(inst, new_driver, tour, pos, driver_dist):
+	d = inst.get_distance(tour[pos],tour[(pos+1)%inst.n])
+	if inst.L - (driver_dist + d) < 0:
+		return inst.L + (driver_dist + d)
+	else:
+		return abs(inst.L - (driver_dist + d))
 
 
 def construct(inst, rand=False, alpha=1.0):
@@ -76,7 +79,7 @@ def construct(inst, rand=False, alpha=1.0):
 		for driver in range(inst.k):
 			candidates.append({
 				"index": driver, 
-				"cost": cost_of_adding_driver(inst, driver, pos, driver_distances[driver])
+				"cost": cost_of_adding_driver(inst, driver, tour, pos, driver_distances[driver])
 			})
 
 		# selecting next driver either greedily, or random greedily
@@ -86,7 +89,7 @@ def construct(inst, rand=False, alpha=1.0):
 			next_driver = select_greedy(candidates)
 
 		# update driver assignment
-		driver_distances[next_driver] += inst.get_distance(pos,(pos+1)%inst.n)
+		driver_distances[next_driver] += inst.get_distance(tour[pos],tour[(pos+1)%inst.n])
 		drivers.append(next_driver)
 
 	return HotSolution(inst,tour=tour, drivers=drivers)
