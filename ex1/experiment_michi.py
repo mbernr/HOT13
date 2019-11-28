@@ -10,13 +10,13 @@ import time
 start_time = time.time()
 
 
-# inst = HotInstance("instances/rl5915_k5_2.txt")
+inst = HotInstance("instances/3000_k2.txt")
 # ns = DriverOneExchange()
-ns = TourReversal()
+# ns = TourReversal()
 # ns = OneBlockMove()
 
 
-
+'''
 
 # test construction
 
@@ -25,7 +25,7 @@ sol = construct_greedy(inst)
 print(sol)
 print(sol.rmse())
 
-
+'''
 
 
 
@@ -33,7 +33,7 @@ print(sol.rmse())
 
 # test grasp
 
-sol = grasp(inst,ns,max_iterations=100)
+sol = grasp(inst,ns,max_iterations=100000, max_time=60)
 print(sol)
 print(sol.rmse())
 
@@ -52,8 +52,10 @@ print(sol)
 print(sol.obj())
 
 print()
+print(sol.inst.M)
+print()
 
-vnd(sol, using_delta_eval=True)
+vnd(sol, [TourReversal(), OneBlockMove(), DriverOneExchange()], max_time=60)
 print(sol)
 print(sol.obj())
 
@@ -95,6 +97,73 @@ print(copy.rmse())
 print()
 
 '''
+
+'''
+
+inst_list = ['0015_k2.txt',
+			'a280_k5_2.txt',
+			'0020_k2.txt',
+			'0025_k2.txt',
+			'1000_k1.txt',
+			'a280_k3_2.txt',
+			'0020_k1.txt',
+			'3000_k2.txt',
+			'berlin52_k4_1.txt',
+			'a280_k2_2.txt',
+			'a280_k2_1.txt',
+			'rl5915_k2_1.txt',
+			'rl5915_k4_2.txt',
+			'1500_k1.txt',
+			'berlin52_k4_2.txt',
+			'a280_k1_2.txt',
+			'3000_k1.txt',
+			'2500_k1.txt',
+			'a280_k3_1.txt',
+			'berlin52_k1_2.txt',
+			'a280_k5_1.txt',
+			'berlin52_k3_2.txt',
+			'0010_k2.txt',
+			'0010_k1.txt',
+			'a280_k4_2.txt',
+			'a280_k1_1.txt',
+			'rl5915_k5_2.txt',
+			'rl5915_k2_2.txt',
+			'berlin52_k2_1.txt',
+			'rl5915_k3_2.txt',
+			'2500_k2.txt',
+			'rl5915_k4_1.txt',
+			'berlin52_k3_1.txt',
+			'rl5915_k1_2.txt',
+			'rl5915_k5_1.txt',
+			'0030_k2.txt',
+			'1000_k2.txt',
+			'2000_k2.txt',
+			'2000_k1.txt',
+			'berlin52_k1_1.txt',
+			'berlin52_k5_2.txt',
+			'0030_k1.txt',
+			'a280_k4_1.txt',
+			'0015_k1.txt',
+			'0025_k1.txt',
+			'1500_k2.txt',
+			'berlin52_k5_1.txt',
+			'berlin52_k2_2.txt',
+			'rl5915_k3_1.txt',
+			'rl5915_k1_1.txt']
+
+
+inst_list.sort()
+
+for inst_path in inst_list:
+
+	inst = HotInstance("instances/" + inst_path)
+	sol = construct_random_greedy(inst, 0.25)
+	print(inst_path)
+	print(sol.rmse())
+	print()
+
+'''
+
 
 
 print("runtime: {}".format(time.time()-start_time))

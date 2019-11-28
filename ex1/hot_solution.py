@@ -48,31 +48,27 @@ class HotSolution(Solution):
 		s += "\n "
 		for driver in self.drivers:
 			s += str(driver) + " "
-		if self.is_infeasible():
-			s += "\nAbove solution is infeasible."
 		return s
 
 
 	def calc_objective(self):
 		self.calc_driver_distances()
-		squared_error_per_driver = np.square(self.driver_distances)
-		squared_error = np.sum(squared_error_per_driver)
+		squared_error = 0
+		for i in range(self.inst.k):
+			squared_error += self.driver_distances[i]**2
 		self.obj_val = squared_error
 		self.obj_val_valid = True
 		return self.obj_val
 
 
 	def calc_driver_distances(self):
-		k = self.inst.k
-		n = self.inst.n
-		L = self.inst.L
-		self.driver_distances = np.full(k, -L)
-		for i in range(n-1):
+		self.driver_distances = [-self.inst.L for i in range(self.inst.k)]
+		for i in range(self.inst.n-1):
 			driver = self.drivers[i]
 			dist = self.inst.get_distance(self.tour[i], self.tour[i+1])
 			self.driver_distances[driver] += dist
-		driver = self.drivers[n-1]
-		dist = self.inst.get_distance(self.tour[n-1], self.tour[0])
+		driver = self.drivers[self.inst.n-1]
+		dist = self.inst.get_distance(self.tour[self.inst.n-1], self.tour[0])
 		self.driver_distances[driver] += dist
 
 	def rmse(self):

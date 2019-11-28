@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import math
+import copy
 
 
 class TourReversal:
@@ -53,7 +54,7 @@ class TourReversal:
 			pos1, pos2 = min(pos1, pos2), max(pos1, pos2)
 
 			squared_error = sol.obj()
-			driver_distances = np.copy(sol.driver_distances)
+			driver_distances = copy.deepcopy(sol.driver_distances)
 
 			#1
 			dr = sol.drivers[(pos1-1)%sol.inst.n]
@@ -118,7 +119,7 @@ class DriverOneExchange:
 	def delta_eval(self, sol, pos, new_driver):
 		if sol.drivers[pos] == new_driver:
 			return sol.obj()
-		driver_distances = np.copy(sol.driver_distances)
+		driver_distances = copy.deepcopy(sol.driver_distances)
 		squared_error = sol.obj()
 		old_driver = sol.drivers[pos]
 		edge_weight = sol.inst.get_distance(sol.tour[pos], sol.tour[(pos+1)%sol.inst.n])
@@ -217,7 +218,7 @@ class OneBlockMove:
 				return tr.delta_eval(sol, old_pos, new_pos)
 			else:
 				squared_error = sol.obj()
-				driver_distances = np.copy(sol.driver_distances)
+				driver_distances = copy.deepcopy(sol.driver_distances)
 
 				#1
 				dr = sol.drivers[old_pos]

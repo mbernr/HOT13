@@ -110,7 +110,7 @@ print("the Jedi are dead")
 
 
 max_time = 5 #TODO CHANGE BEFORE RUN
-max_iterations = 1000000
+max_iterations = 10000
 print("max_time: ", max_time, " max_iterations: ", max_iterations)
 
 for inst_name in inst_list1:
@@ -191,9 +191,9 @@ for inst_name in inst_list1:
 	starting_time = time.process_time()
 
 	sol.copy_from(det_sol)
-	ns = TourReversal() #TODO change to the best
+	ns = TourReversal() 
 
-	sol = grasp(inst, ns, max_iterations=max_iterations, max_time=max_time)
+	sol = grasp(inst, ns, max_iterations=1000, max_time=max_time)
 
 	sol_file_path = "solutions/grasp/"
 	res_file_path = "results/grasp.txt"
