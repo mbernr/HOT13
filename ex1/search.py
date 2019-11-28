@@ -6,14 +6,16 @@ import math
 
 def local_search(sol, ns, max_iterations=math.inf, max_time=math.inf, step_function="best_improve", using_delta_eval=True):
 
-	if step_function not in ["best_improvement", "next_improvement", "random_improvement"]:
+	if step_function not in ["best_improvement", "next_improvement", "random"]:
 		print("Error in local search: Invalid step function.")
-
+	best_solution = sol.copy()
 	iterations = 0
 	start_time = time.clock()
 
 	while ns.move(sol, step_function=step_function, using_delta_eval=using_delta_eval):
-
+		if step_function == "random":
+			if sol.obj() < best_solution.obj()
+				best_solution.best_from(sol)
 		# checking if max number of iterations is exceeded
 		iterations += 1
 		if iterations >= max_iterations:
@@ -23,10 +25,13 @@ def local_search(sol, ns, max_iterations=math.inf, max_time=math.inf, step_funct
 		if time.clock()-start_time > max_time:
 			break
 
+	if step_function == "random":
+		sol.copy_from(best_solution)
+
 
 def vnd(sol, max_iterations=1000, max_time=15*60, step_function="best_improvement", using_delta_eval=True):
 
-	if step_function not in ["best_improvement", "next_improvement", "random_improvement"]:
+	if step_function not in ["best_improvement", "next_improvement", "random"]:
 		print("Error in vnd: Invalid step function.")
 
 	iterations = 0
@@ -69,7 +74,7 @@ def simulated_annealing(sol, nsa, T, alpha = 0.95, max_iterations=100000, max_ti
 		while(eq_condition != sol.inst.n*(sol.inst.n-1)):
 			temp_sol.copy_from(curr_sol)
 			ns = random.choice(nsa)
-			ns.move(temp_sol, "random_improvement", True)
+			ns.move(temp_sol, "random", True)
 			if temp_sol.obj() < curr_sol.obj():
 				curr_sol.copy_from(temp_sol)
 			else:
