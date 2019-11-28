@@ -15,14 +15,14 @@ class HotSolution(Solution):
 		self.to_maximize = False
 
 		if len(tour) > 0:
-			self.tour = np.array(tour)
+			self.tour = np.array(tour, dtype=np.int16)
 		else:
-			self.tour = np.array([i for i in range(inst.n)])
+			self.tour = np.arange(self.inst.n, dtype=np.int16)
 
 		if len(drivers) > 0:
-			self.drivers = np.array(drivers)
+			self.drivers = np.array(drivers, dtype=np.int8)
 		else:
-			self.drivers = np.zeros(self.inst.n, dtype=int)
+			self.drivers = np.zeros(self.inst.n, dtype=np.int8)
 
 		self.calc_objective()
 

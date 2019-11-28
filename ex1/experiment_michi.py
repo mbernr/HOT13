@@ -16,7 +16,7 @@ inst = HotInstance("instances/3000_k2.txt")
 # ns = OneBlockMove()
 
 
-'''
+
 
 # test construction
 
@@ -25,7 +25,7 @@ sol = construct_greedy(inst)
 print(sol)
 print(sol.rmse())
 
-'''
+
 
 
 
