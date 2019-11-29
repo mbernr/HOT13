@@ -32,7 +32,7 @@ def store_results(sol_file_path, res_file_path, inst_name, sol, running_time, av
 	if avg != -1:
 		result_file.write(", " + str(round(avg,4)))
 	if infeas == True:
-		result_file.write(", Solution in infeasible")
+		result_file.write(", infeasible")
 	result_file.write("\n")
 	result_file.close()
 
@@ -72,7 +72,7 @@ empty_folder("solutions/simulated_annealing/*")
 print("the Jedi are dead")
 
 
-max_time = 5 #TODO CHANGE BEFORE RUN
+max_time = 2*60 #TODO CHANGE BEFORE RUN
 max_iterations = 10000
 print("max_time: ", max_time, " max_iterations: ", max_iterations)
 
@@ -139,15 +139,6 @@ for inst_name in inst_list:
 			running_time = time.process_time() - starting_time
 
 			store_results(sol_file_path, res_file_path, inst_name, sol, running_time)
-
-			if sf == "best_improvement":
-				starting_time = time.process_time()
-
-				local_search(sol, nsa[i], max_iterations=max_iterations, max_time=max_time, step_function=sf, using_delta_eval=False)
-
-				sol_file_path = "solutions/local_search/" + ns_name + "_" + sf + "_"
-				delta_res_file_path = "results/local_search_delta_"+ ns_name + "_" + sf + ".txt"
-				store_results(sol_file_path, delta_res_file_path, inst_name, sol, running_time)
 
 
 	#------------------------GRASP--------------------------
