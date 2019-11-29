@@ -157,23 +157,17 @@ for inst_name in inst_list:
 
 	#---------------------VND----------------------
 
-	ns_structures = [TourReversal(), OneBlockMove(), DriverOneExchange()]
+	starting_time = time.process_time()
 
-	for ns_orders in [[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]]:
+	sol.copy_from(det_sol)
 
-		used_ns_structures = [ns_structures[ns_orders[0]], ns_structures[ns_orders[1]], ns_structures[ns_orders[2]]]
+	vnd(sol, [TourReversal(),  DriverOneExchange(), OneBlockMove()], max_iterations = max_iterations,  max_time=max_time, using_delta_eval=True)
 
-		starting_time = time.process_time()
+	sol_file_path = "solutions/vnd/"
+	res_file_path = "results/vnd.txt"
+	running_time = time.process_time() - starting_time
 
-		sol.copy_from(det_sol)
-
-		vnd(sol, used_ns_structures, max_iterations = max_iterations,  max_time=max_time, using_delta_eval=True)
-
-		sol_file_path = "solutions/vnd/" + str(ns_orders) + "_"
-		res_file_path = "results/vnd_" + str(ns_orders) + ".txt"
-		running_time = time.process_time() - starting_time
-
-		store_results(sol_file_path, res_file_path, inst_name, sol, running_time)
+	store_results(sol_file_path, res_file_path, inst_name, sol, running_time)
 
 
 	#----------------SIMULATED ANNEALING-----------

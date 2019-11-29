@@ -10,13 +10,13 @@ import time
 start_time = time.time()
 
 
-inst = HotInstance("instances/0010_k2.txt")
+# inst = HotInstance("instances/berlin52_k5_1.txt")
 # ns = DriverOneExchange()
 # ns = TourReversal()
 # ns = OneBlockMove()
 
 
-
+'''
 
 # test construction
 
@@ -25,7 +25,7 @@ sol = construct_greedy(inst)
 print(sol)
 print(sol.rmse())
 
-
+'''
 
 
 
@@ -43,23 +43,41 @@ print()
 
 
 
-'''
+
 
 # test vnd 
 
-sol = construct_random_greedy(inst, 0.25)
-print(sol)
-print(sol.obj())
-
-print()
-print(sol.inst.M)
+print("TourReversal = 0, OneBlockMove = 1, DriverOneExchange = 2")
 print()
 
-vnd(sol, [TourReversal(), OneBlockMove(), DriverOneExchange()], max_time=60)
-print(sol)
-print(sol.obj())
 
-'''
+for inst_name in ['a280_k5_1.txt']:
+
+	print(inst_name)
+
+	inst = HotInstance("instances/" + inst_name)
+	sol = construct_greedy(inst)
+
+	ns_structures = [TourReversal(), OneBlockMove(), DriverOneExchange()]
+
+	for ns_order in [[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]]:
+
+		starting_time = time.process_time()
+
+		used_ns_structures = [ns_structures[ns_order[0]], ns_structures[ns_order[1]], ns_structures[ns_order[2]]]
+		copy = sol.copy()
+		vnd(copy, used_ns_structures, max_time=60*10)
+
+		running_time = time.process_time() - starting_time
+
+		print("{}, {}, {}s".format(
+			ns_order,
+			round(copy.rmse(), 4),
+			round(running_time, 4)
+		))
+
+	print()
+
 
 
 '''
@@ -95,72 +113,6 @@ local_search(copy, ns,
 print(copy)
 print(copy.rmse())
 print()
-
-'''
-
-'''
-
-inst_list = ['0015_k2.txt',
-			'a280_k5_2.txt',
-			'0020_k2.txt',
-			'0025_k2.txt',
-			'1000_k1.txt',
-			'a280_k3_2.txt',
-			'0020_k1.txt',
-			'3000_k2.txt',
-			'berlin52_k4_1.txt',
-			'a280_k2_2.txt',
-			'a280_k2_1.txt',
-			'rl5915_k2_1.txt',
-			'rl5915_k4_2.txt',
-			'1500_k1.txt',
-			'berlin52_k4_2.txt',
-			'a280_k1_2.txt',
-			'3000_k1.txt',
-			'2500_k1.txt',
-			'a280_k3_1.txt',
-			'berlin52_k1_2.txt',
-			'a280_k5_1.txt',
-			'berlin52_k3_2.txt',
-			'0010_k2.txt',
-			'0010_k1.txt',
-			'a280_k4_2.txt',
-			'a280_k1_1.txt',
-			'rl5915_k5_2.txt',
-			'rl5915_k2_2.txt',
-			'berlin52_k2_1.txt',
-			'rl5915_k3_2.txt',
-			'2500_k2.txt',
-			'rl5915_k4_1.txt',
-			'berlin52_k3_1.txt',
-			'rl5915_k1_2.txt',
-			'rl5915_k5_1.txt',
-			'0030_k2.txt',
-			'1000_k2.txt',
-			'2000_k2.txt',
-			'2000_k1.txt',
-			'berlin52_k1_1.txt',
-			'berlin52_k5_2.txt',
-			'0030_k1.txt',
-			'a280_k4_1.txt',
-			'0015_k1.txt',
-			'0025_k1.txt',
-			'1500_k2.txt',
-			'berlin52_k5_1.txt',
-			'berlin52_k2_2.txt',
-			'rl5915_k3_1.txt',
-			'rl5915_k1_1.txt']
-
-
-inst_list.sort()
-
-for inst_path in inst_list:
-
-	inst = HotInstance("instances/" + inst_path)
-	sol = construct_random_greedy(inst, 0.25)
-	print(inst_path)
-	print(sol.rmse())
-	print()
 
 '''
 
