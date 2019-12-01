@@ -16,17 +16,17 @@ start_time = time.time()
 # ns = OneBlockMove()
 
 
+
 '''
 
 # test construction
 
 sol = construct_greedy(inst)
-# sol = construct_random_greedy(inst, 0.25)
+sol = construct_random_greedy(inst, 0.5)
 print(sol)
 print(sol.rmse())
 
 '''
-
 
 
 '''
@@ -43,7 +43,7 @@ print()
 
 
 
-
+'''
 
 # test vnd 
 
@@ -78,43 +78,46 @@ for inst_name in ['a280_k5_1.txt']:
 
 	print()
 
-
-
 '''
+
+
 
 # test delta eval
 
-sol = construct_random_greedy(inst, 1.0)
-# sol = construct_greedy(inst)
-# sol = HotSolution(inst, drivers=[0,1,1,0,0,1,1,0,0,1])
+for ns in [TourReversal(), OneBlockMove(), DriverOneExchange()]:
 
-print(sol)
-print(sol.rmse())
-print()
+	print(ns)
 
-copy = sol.copy()
+	for inst_name in ['0030_k2.txt', 'berlin52_k5_2.txt', 'a280_k5_1.txt']:
 
-print("no delta")
-local_search(sol, ns,
-	max_iterations=100,
-	step_function="best_improvement",
-	using_delta_eval=False)
+		inst = HotInstance("instances/" + inst_name)
 
-print(sol)
-print(sol.rmse())
-print()
+		# sol = construct_random_greedy(inst, 1.0)
+		sol = construct_greedy(inst)
+		# sol = HotSolution(inst, drivers=[0,1,1,0,0,1,1,0,0,1])
+		copy = sol.copy()
 
-print("with delta")
-local_search(copy, ns,
-	max_iterations=100,
-	step_function="best_improvement",
-	using_delta_eval=True)
+		no_delta_start_time = time.process_time()
 
-print(copy)
-print(copy.rmse())
-print()
+		local_search(sol, ns,
+			max_time=10*60,
+			step_function="best_improvement",
+			using_delta_eval=False)
 
-'''
+		no_delta_time = time.process_time() - no_delta_start_time
+
+		delta_start_time = time.process_time()
+
+		local_search(copy, ns,
+			max_time=10*60,
+			step_function="best_improvement",
+			using_delta_eval=True)
+
+		delta_time = time.process_time() - delta_start_time
+
+		print("{}, {}s, {}s".format(inst_name, no_delta_time, delta_time))
+
+
 
 
 
