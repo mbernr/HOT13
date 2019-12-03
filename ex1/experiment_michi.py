@@ -82,6 +82,33 @@ for inst_name in ['a280_k5_1.txt']:
 
 
 
+
+# test local search
+
+for ns in [TourReversal(), OneBlockMove(), DriverOneExchange()]:
+
+	print(ns)
+
+	for inst_name in ['0030_k2.txt', 'berlin52_k5_2.txt', 'a280_k5_1.txt']:
+
+		inst = HotInstance("instances/" + inst_name)
+
+		# sol = construct_random_greedy(inst, 1.0)
+		sol = construct_greedy(inst)
+		# sol = HotSolution(inst, drivers=[0,1,1,0,0,1,1,0,0,1])
+
+		print(inst_name, end = " ")
+
+		local_search(sol, ns,
+			max_time=10*60,
+			step_function="best_improvement",
+			using_delta_eval=True)
+	
+
+
+
+'''
+
 # test delta eval
 
 for ns in [TourReversal(), OneBlockMove(), DriverOneExchange()]:
@@ -117,7 +144,7 @@ for ns in [TourReversal(), OneBlockMove(), DriverOneExchange()]:
 
 		print("{}, {}s, {}s".format(inst_name, no_delta_time, delta_time))
 
-
+'''
 
 
 
