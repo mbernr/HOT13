@@ -1,3 +1,5 @@
+from hot_instance import *
+from hot_solution import *
 from neighbourhood_structures import *
 import random
 import time

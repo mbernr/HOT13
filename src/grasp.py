@@ -1,3 +1,5 @@
+from hot_instance import *
+from hot_solution import *
 import math
 from construction_heuristics import *
 from search import *

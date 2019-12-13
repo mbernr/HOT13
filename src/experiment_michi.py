@@ -4,20 +4,27 @@ from construction_heuristics import *
 from neighbourhood_structures import *
 from search import *
 from grasp import *
+from ga import *
 import time 
 
 
 start_time = time.time()
 
 
-inst = HotInstance("instances/berlin52_k5_1.txt")
+inst = HotInstance("instances/0010_k2.txt")
 # ns = DriverOneExchange()
-ns = TourReversal()
+# ns = TourReversal()
 # ns = OneBlockMove()
 
 
 
+# test ga
 
+ga(inst, pop_size=10)
+
+
+
+'''
 
 # test construction
 
@@ -26,7 +33,7 @@ sol = construct_greedy(inst)
 print(sol)
 print(sol.rmse())
 
-
+'''
 
 
 '''
