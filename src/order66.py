@@ -43,12 +43,12 @@ print("lets go")
 #webbrowser.open('https://www.youtube.com/watch?v=sNjWpZmxDgg')
 
 inst_list = [
-	#'0010_k1.txt', '0010_k2.txt',
+	'0010_k1.txt', '0010_k2.txt',
 	#'0015_k1.txt', '0015_k2.txt',
 	#'0020_k1.txt', '0020_k2.txt',
 	#'0025_k1.txt', '0025_k2.txt',
 	#'0030_k1.txt', '0030_k2.txt',
-	'1000_k1.txt', '1000_k2.txt',
+	#'1000_k1.txt', '1000_k2.txt',
 	#'1500_k1.txt', '1500_k2.txt',
 	#'2000_k1.txt', '2000_k2.txt',
 	#'2500_k1.txt', '2500_k2.txt',

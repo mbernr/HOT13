@@ -10,23 +10,23 @@ import time
 start_time = time.time()
 
 
-# inst = HotInstance("instances/berlin52_k5_1.txt")
+inst = HotInstance("instances/berlin52_k5_1.txt")
 # ns = DriverOneExchange()
-# ns = TourReversal()
+ns = TourReversal()
 # ns = OneBlockMove()
 
 
 
-'''
+
 
 # test construction
 
 sol = construct_greedy(inst)
-sol = construct_random_greedy(inst, 0.5)
+# sol = construct_random_greedy(inst, 0.5)
 print(sol)
 print(sol.rmse())
 
-'''
+
 
 
 '''
@@ -81,7 +81,7 @@ for inst_name in ['a280_k5_1.txt']:
 '''
 
 
-
+'''
 
 # test local search
 
@@ -104,7 +104,7 @@ for ns in [TourReversal(), OneBlockMove(), DriverOneExchange()]:
 			step_function="best_improvement",
 			using_delta_eval=True)
 	
-
+'''
 
 
 '''
