@@ -5,14 +5,17 @@ import math
 import sys
 
 
-def ga(inst, pop_size=300, alpha=1.0, selec_ratio=0.5, repl_ratio=1.0, max_iterations=math.inf, max_time=math.inf):
-	pop = initialize_pop(inst, pop_size, alpha)
-	chosen_ones = select(pop, selec_ratio)
-	children = order_2p_crossover(chosen_ones)
-	children = mutate(children)
-	pop = replace(pop, children, repl_ratio)
-	print(pop)
-
+def ga(inst, num_generations=math.inf, pop_size=300, alpha=1.0, selec_ratio=0.5, tour_size=3, repl_ratio=1.0, max_time=math.inf):
+	'''
+		repl_ratio: Maximum percentage of individuals in the new generation
+	'''
+	for _ in range(num_generations):
+		pop = initialize_pop(inst, pop_size, alpha)
+		chosen_ones = select(pop, selec_ratio, tour_size)
+		children = crossover(chosen_ones)
+		children = mutate(children)
+		pop = replace(pop, children, repl_ratio)
+		print(pop)
 
 
 def initialize_pop(inst, pop_size, alpha):
@@ -22,11 +25,22 @@ def initialize_pop(inst, pop_size, alpha):
 	return pop
 
 
-def select(pop, selec_ratio):
-	# TODO
-	# Select certain number of pop (based on selec_ratio)
-	# random selection, influenced by fitness
-	return pop[:round(len(pop)*selec_ratio)]
+def select(pop, selec_ratio, tour_size):
+	chosen = set()
+	unchosen = set(range(len(pop)))
+	for _ in range(round(len(pop)*selec_ratio)):
+		competitors = random.sample(unchosen, tour_size)
+		best = competitors[0]
+		for i in range(1, len(competitors)):
+			curr = competitors[i]
+			if pop[curr].obj() < pop[best].obj():
+				best = curr
+		chosen.add(best)
+		unchosen.remove(best)
+	chosen_solutions = []
+	for i in chosen:
+		chosen_solutions.append(pop[i])
+	return chosen_solutions
 
 
 def generate_offspring(parent1, parent2, pos1, pos2):
