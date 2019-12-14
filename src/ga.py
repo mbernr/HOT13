@@ -3,16 +3,24 @@ from hot_solution import *
 from construction_heuristics import *
 import math
 import sys
+import random
 
-
-def ga(inst, num_generations=math.inf, pop_size=300, alpha=1.0, selec_ratio=0.5, tour_size=3, repl_ratio=1.0, max_time=math.inf):
+def ga(inst, num_generations=100, pop_size=300, alpha=1.0, selec_ratio=0.5, tour_size=3, repl_ratio=1.0, crossover_prob=0.7, max_time=math.inf):
 	'''
+		inst: instance
+		num_generations = number of generations the algorithm performs
+		pop_size: size of the population
+		alpha: parameter for construct_random_greedy
+		selec_ratio: percentage of solutions that get selected every generation to pass their genes
+		tour_size: size of the groups selected for the tournament during selection
 		repl_ratio: Maximum percentage of individuals in the new generation
+		crossover_prob: probability for a couple of parents to create offspring through crossover
+		max_time: max time
 	'''
 	for _ in range(num_generations):
 		pop = initialize_pop(inst, pop_size, alpha)
 		chosen_ones = select(pop, selec_ratio, tour_size)
-		children = crossover(chosen_ones)
+		children = order_2p_crossover(chosen_ones, crossover_prob)
 		children = mutate(children)
 		pop = replace(pop, children, repl_ratio)
 		print(pop)
@@ -56,28 +64,38 @@ def generate_offspring(parent1, parent2, pos1, pos2):
 	offspring = parent1.copy()
 	center = set(parent1.tour[pos1:pos2])
 	newstuff = []
+	tour = []
 	for i in parent2.tour:
 		if i not in center:
 			newstuff.append(i)
-	tour = newstuff[:pos1] + parent1.tour[pos1:pos2] +  newstuff[pos2:]
+	for el in newstuff[:pos1]:
+		tour.append(el)
+	for el in parent1.tour[pos1:pos2]:
+		tour.append(el)
+	for el in newstuff[pos2:]:
+		tour.append(el)
 	offspring.tour = tour
 
 	return offspring
 
 
-def order_2p_crossover(individuals):
+def order_2p_crossover(individuals, crossover_prob):
 	children = []
 	#go through all the parent1parent2 combinations and cross them over with a certain probability
-
-	#randomize the two points
-	#check they are not the same (otw its lame)
-	#if needed swap them so pos1 < pos2
-	pos1 = random.randrange(0, len(parent1.tour), 1)
-	pos2 = random.randrange(0, len(parent1.tour), 1)
-	while pos2==pos1:
-		pos2 = random.randrange(0, len(parent1.tour), 1)
-	if pos1 > pos2:
-		pos1, pos2 = pos2, pos1
+	for parent1 in individuals:
+		for parent2 in individuals:
+			if parent1 != parent2:
+				if random.random() < crossover_prob:
+					#with probability
+					#randomize the two points
+					#check they are not the same (otw its lame)
+					#if needed swap them so pos1 < pos2
+					pos1 = random.randrange(0, len(parent1.tour), 1)
+					pos2 = random.randrange(0, len(parent1.tour), 1)
+					while pos2==pos1:
+						pos2 = random.randrange(0, len(parent1.tour), 1)
+					if pos1 > pos2:
+						pos1, pos2 = pos2, pos1
 
 
 	#create offspring1 parent1->parent2
