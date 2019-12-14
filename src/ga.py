@@ -49,18 +49,12 @@ def generate_offspring(parent1, parent2, pos1, pos2):
 	offspring.tour = tour
 
 	return offspring
-<<<<<<< Updated upstream
-def order_2p_crossover(individuals, ):
-	children = []
-	#go through all the parent1parent2 combinations and cross them over with a certain probability
 
 
-=======
 def order_2p_crossover(individuals):
 	children = []
 	#go through all the parent1parent2 combinations and cross them over with a certain probability
 
->>>>>>> Stashed changes
 	#randomize the two points
 	#check they are not the same (otw its lame)
 	#if needed swap them so pos1 < pos2
