@@ -1,35 +1,49 @@
 from hot_instance import *
 from hot_solution import *
 from construction_heuristics import *
+from grasp import *
+from neighbourhood_structures import *
 import math
 import sys
 import random
 
-def ga(inst, num_generations=100, pop_size=300, alpha=1.0, selec_ratio=0.5, tour_size=3, repl_ratio=1.0, crossover_prob=0.7, mutation_prob=0.3, max_time=math.inf):
+def ga(inst, num_generations=100, pop_size=300, using_grasp=False, alpha=1.0, selec_ratio=0.5, tour_size=3, repl_ratio=1.0, crossover_prob=0.7, mutation_prob=0.3, hof_size=3, max_time=math.inf):
 	'''
 		inst: instance
 		num_generations = number of generations the algorithm performs
 		pop_size: size of the population
+		using_grasp: If true, grasp will be used for initialization. Otherwise, simple random greedy construction heuristic.
 		alpha: parameter for construct_random_greedy
 		selec_ratio: percentage of solutions that get selected every generation to pass their genes
 		tour_size: size of the groups selected for the tournament during selection
 		repl_ratio: Maximum percentage of individuals in the new generation
 		crossover_prob: probability for a couple of parents to create offspring through crossover
+		mutation_prob: probability that a children will be mutated
+		hof_size: size of the hall of fame
 		max_time: max time
 	'''
-	pop = initialize_pop(inst, pop_size, alpha)
+
+	pop = initialize_pop(inst, pop_size, using_grasp, alpha)
+	hof = sorted(pop, key=lambda sol: sol.obj())[:hof_size]
+
 	for _ in range(num_generations):
 		chosen_ones = select(pop, selec_ratio, tour_size)
 		children = order_2p_crossover(chosen_ones, crossover_prob)
 		children = mutate(children, mutation_prob)
 		pop = replace(pop, children, repl_ratio)
-		print(pop)
+		hof = sorted(hof + pop, key=lambda sol: sol.obj())[:hof_size]
+
+	return hof
 
 
-def initialize_pop(inst, pop_size, alpha):
+def initialize_pop(inst, pop_size, using_grasp, alpha):
 	pop = []
+	ns = TourReversal() # since we used this ns for GRASP in the first assignment
 	for _ in range(pop_size):
-		pop.append(construct_random_greedy(inst, alpha))
+		if using_grasp:
+			pop.append(grasp(inst, ns, alpha, max_iterations=10))
+		else:
+			pop.append(construct_random_greedy(inst, alpha))
 	return pop
 
 
