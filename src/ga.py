@@ -116,5 +116,16 @@ def mutate(individuals):
 	return individuals
 
 
-def replace(pop, children, repl_ratio): # repl_ratio here?
-	return pop # TODO
+def replace(parents, children, repl_ratio): 
+
+	pop_size = len(parents)
+	children_needed = round(repl_ratio * pop_size)
+	num_children = min(children_needed, len(children))
+	num_parents = pop_size - num_children
+	
+	chosen_children = random.sample(children, num_children)
+	chosen_parents = random.sample(parents, num_parents)
+
+	new_gen = chosen_parents + chosen_children
+
+	return new_gen

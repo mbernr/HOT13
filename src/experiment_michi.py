@@ -20,7 +20,7 @@ inst = HotInstance("instances/0010_k2.txt")
 
 # test ga
 
-ga(inst, num_generations=10, pop_size=10)
+ga(inst, num_generations=1, pop_size=10, repl_ratio=0.66)
 
 
 
