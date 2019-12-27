@@ -24,9 +24,9 @@ hof = ga(inst,
    num_generations=10, 
    pop_size=100, 
    hof_size=10,
-   repl_ratio=0.66, 
+   repl_ratio=1.0, 
    using_grasp=False,
-   alpha=0.75)
+   alpha=1.0)
 
 for sol in hof:
 	print(sol.obj())

@@ -119,24 +119,23 @@ def generate_offspring(parent1, parent2, pos1, pos2):
 
 def order_2p_crossover(individuals, crossover_prob):
 	children = []
-	#go through all the parent1parent2 combinations and cross them over with a certain probability
+	#go through all the parent1-parent2 combinations and cross them over with a certain probability
 	for pp1 in range(len(individuals)):
-		for pp2 in range(len(individuals)):
-			if pp1 != pp2:
-				parent1 = individuals[pp1] 
-				parent2 = individuals[pp2]
+		for pp2 in range(pp1+1, len(individuals)):
+			parent1 = individuals[pp1] 
+			parent2 = individuals[pp2]
 
-				if random.random() < crossover_prob:
-					#with probability
-					#randomize the two points
-					#check they are not the same (otw its lame)
-					#if needed swap them so pos1 < pos2
-					pos1 = random.randrange(0, len(parent1.tour), 1)
+			if random.random() < crossover_prob:
+				#with probability
+				#randomize the two points
+				#check they are not the same (otw its lame)
+				#if needed swap them so pos1 < pos2
+				pos1 = random.randrange(0, len(parent1.tour), 1)
+				pos2 = random.randrange(0, len(parent1.tour), 1)
+				while pos2==pos1:
 					pos2 = random.randrange(0, len(parent1.tour), 1)
-					while pos2==pos1:
-						pos2 = random.randrange(0, len(parent1.tour), 1)
-					if pos1 > pos2:
-						pos1, pos2 = pos2, pos1
+				if pos1 > pos2:
+					pos1, pos2 = pos2, pos1
 
 
 	#create offspring1 parent1->parent2
