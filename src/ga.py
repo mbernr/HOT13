@@ -17,8 +17,8 @@ def ga(inst, num_generations=100, pop_size=300, alpha=1.0, selec_ratio=0.5, tour
 		crossover_prob: probability for a couple of parents to create offspring through crossover
 		max_time: max time
 	'''
+	pop = initialize_pop(inst, pop_size, alpha)
 	for _ in range(num_generations):
-		pop = initialize_pop(inst, pop_size, alpha)
 		chosen_ones = select(pop, selec_ratio, tour_size)
 		children = order_2p_crossover(chosen_ones, crossover_prob)
 		children = mutate(children)
@@ -96,7 +96,6 @@ def order_2p_crossover(individuals, crossover_prob):
 						pos2 = random.randrange(0, len(parent1.tour), 1)
 					if pos1 > pos2:
 						pos1, pos2 = pos2, pos1
-
 
 	#create offspring1 parent1->parent2
 	offspring1 = generate_offspring(parent1, parent2, pos1, pos2)
