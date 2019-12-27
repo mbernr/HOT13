@@ -30,8 +30,7 @@ def ga(inst, num_generations=100, pop_size=300, using_grasp=False, alpha=1.0, se
 		chosen_ones = select(pop, selec_ratio, tour_size)
 		children = order_2p_crossover(chosen_ones, crossover_prob)
 		children = mutate(children, mutation_prob)
-		pop = replace(pop, children, repl_ratio)
-		hof = sorted(hof + pop, key=lambda sol: sol.obj())[:hof_size]
+		pop, hof = replace(pop, children, repl_ratio, hof)
 
 	return hof
 
@@ -181,9 +180,11 @@ def mutate(children, mutation_prob):
 	return children
 
 
-def replace(parents, children, repl_ratio): 
+def replace(parents, children, repl_ratio, hof): 
 
 	pop_size = len(parents)
+	hof_size = len(hof)
+
 	children_needed = round(repl_ratio * pop_size)
 	num_children = min(children_needed, len(children))
 	num_parents = pop_size - num_children
@@ -193,7 +194,11 @@ def replace(parents, children, repl_ratio):
 
 	for individual in chosen_children:
 		individual.calc_objective()
+		for i in range(len(hof)):
+			if individual.obj() < hof[i].obj():
+				hof = hof[:i] + [individual] + hof[i:-1]
+				break
 
 	new_gen = chosen_parents + chosen_children
 
-	return new_gen
+	return new_gen, hof
