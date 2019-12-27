@@ -23,7 +23,6 @@ def ga(inst, num_generations=100, pop_size=300, alpha=1.0, selec_ratio=0.5, tour
 		children = order_2p_crossover(chosen_ones, crossover_prob)
 		children = mutate(children, mutation_prob)
 		pop = replace(pop, children, repl_ratio)
-		evaluate(pop)
 		print(pop)
 
 
@@ -180,11 +179,9 @@ def replace(parents, children, repl_ratio):
 	chosen_children = random.sample(children, num_children)
 	chosen_parents = random.sample(parents, num_parents)
 
+	for individual in chosen_children:
+		individual.calc_objective()
+
 	new_gen = chosen_parents + chosen_children
 
 	return new_gen
-
-
-def evaluate(population):
-	for individual in population:
-		individual.calc_objective()
