@@ -137,14 +137,13 @@ def order_2p_crossover(individuals, crossover_prob):
 				if pos1 > pos2:
 					pos1, pos2 = pos2, pos1
 
+				#create offspring1 parent1->parent2
+				offspring1 = generate_offspring(parent1, parent2, pos1, pos2)
+				children.append(offspring1)
 
-	#create offspring1 parent1->parent2
-	offspring1 = generate_offspring(parent1, parent2, pos1, pos2)
-	children.append(offspring1)
-
-	#create offspring2 parent2->parent1
-	offspring2 = generate_offspring(parent2, parent1, pos1, pos2)
-	children.append(offspring2)
+				#create offspring2 parent2->parent1
+				offspring2 = generate_offspring(parent2, parent1, pos1, pos2)
+				children.append(offspring2)
 
 	return children
 
