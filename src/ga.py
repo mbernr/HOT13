@@ -79,7 +79,7 @@ def generate_offspring(parent1, parent2, pos1, pos2):
 	drivers = []
 
 	for i in range(len(parent2.tour)):
-		if parent1.tour[i] not in center:
+		if parent2.tour[i] not in center:
 			newstuff_tour.append(parent2.tour[i])
 			newstuff_driver.append(parent2.drivers[i])
 	
