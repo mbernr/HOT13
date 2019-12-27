@@ -24,8 +24,6 @@ class HotSolution(Solution):
 		else:
 			self.drivers = np.zeros(self.inst.n, dtype=np.int8)
 
-		self.calc_objective()
-
 
 	def copy(self):
 		copied_tour = np.copy(self.tour)
