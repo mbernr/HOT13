@@ -194,7 +194,13 @@ def replace(parents, children, repl_ratio, hof):
 
 	for individual in chosen_children:
 		individual.calc_objective()
+
+		# update hof
 		for i in range(len(hof)):
+			# if a solution with the same tour and driver assignment is already in the hof, we don't need a second one
+			if individual == hof[i]:
+				break
+			# if the new solution is better, add it to the hof in order, and drop the last element from the hof
 			if individual.obj() < hof[i].obj():
 				hof = hof[:i] + [individual] + hof[i:-1]
 				break

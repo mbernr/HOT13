@@ -21,7 +21,7 @@ inst = HotInstance("instances/0010_k2.txt")
 # test ga
 
 hof = ga(inst, 
-   num_generations=100, 
+   num_generations=1000, 
    pop_size=100, 
    hof_size=10,
    repl_ratio=1.0, 
