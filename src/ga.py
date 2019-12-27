@@ -5,7 +5,7 @@ import math
 import sys
 import random
 
-def ga(inst, num_generations=100, pop_size=300, alpha=1.0, selec_ratio=0.5, tour_size=3, repl_ratio=1.0, crossover_prob=0.7, max_time=math.inf):
+def ga(inst, num_generations=100, pop_size=300, alpha=1.0, selec_ratio=0.5, tour_size=3, repl_ratio=1.0, crossover_prob=0.7, mutation_prob=0.3, max_time=math.inf):
 	'''
 		inst: instance
 		num_generations = number of generations the algorithm performs
@@ -21,7 +21,7 @@ def ga(inst, num_generations=100, pop_size=300, alpha=1.0, selec_ratio=0.5, tour
 	for _ in range(num_generations):
 		chosen_ones = select(pop, selec_ratio, tour_size)
 		children = order_2p_crossover(chosen_ones, crossover_prob)
-		children = mutate(children)
+		children = mutate(children, mutation_prob)
 		pop = replace(pop, children, repl_ratio)
 		print(pop)
 
@@ -50,6 +50,16 @@ def select(pop, selec_ratio, tour_size):
 		chosen_solutions.append(pop[i])
 	return chosen_solutions
 
+#def randomize_2_pos(max):
+#TODO
+#	pos1 = random.randrange(0, len(parent1.tour), 1)
+#	pos2 = random.randrange(0, len(parent1.tour), 1)
+#	while pos2==pos1:
+#		pos2 = random.randrange(0, len(parent1.tour), 1)
+#	if pos1 > pos2:
+#		pos1, pos2 = pos2, pos1
+#
+#	return pos1, pos2
 
 def generate_offspring(parent1, parent2, pos1, pos2):
 	'''
@@ -97,6 +107,7 @@ def order_2p_crossover(individuals, crossover_prob):
 					if pos1 > pos2:
 						pos1, pos2 = pos2, pos1
 
+
 	#create offspring1 parent1->parent2
 	offspring1 = generate_offspring(parent1, parent2, pos1, pos2)
 	children.append(offspring1)
@@ -108,12 +119,37 @@ def order_2p_crossover(individuals, crossover_prob):
 	return children
 
 
-def mutate(individuals):
-	# TODO
+def driver_flip(individual, pos, driver):
+		individual.drivers[pos] = driver
+
+
+def tour_swap(individual, p1, p2):
+	individual.tour = self.reverse_array_section(individual.tour, p1, p2)
+	individual.drivers = self.reverse_array_section(individual.drivers, p1, p2-1)
+
+
+def mutate(children, mutation_prob):
 	# tour swap (e.g. 50% chance)
-	# driver fliip (e.g. 50% chance)
-	# one solution can be mutated by both tour swap and driver flip
-	return individuals
+	# driver flip (e.g. 50% chance)
+	# one solution cannot be mutated by both tour swap and driver flip
+
+	for child in children:
+		if random.random() < mutation_prob:
+			i = random.randrange(1, 2)
+			if i == 1:
+				pos = random.randrange(0, len(child.drivers), 1)
+				driver = random.randrange(0, child.inst.k, 1)
+				driver_flip(child, pos, driver)
+			else:
+				p1 = random.randrange(0, len(child.drivers), 1)
+				p2 = random.randrange(0, len(child.drivers), 1)
+				while p1 == p2 or abs(p1-p2) == (child.inst.n-1):								
+					p2 = random.randrange(0, len(child.drivers), 1)
+				p1, p2 = min(p1, p2), max(p1, p2)
+
+				tour_swap(individual, p1, p2)
+
+	return children
 
 
 def replace(parents, children, repl_ratio): 
