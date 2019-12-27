@@ -73,18 +73,32 @@ def generate_offspring(parent1, parent2, pos1, pos2):
 	'''
 	offspring = parent1.copy()
 	center = set(parent1.tour[pos1:pos2])
-	newstuff = []
+	newstuff_tour = []
+	newstuff_driver = []
 	tour = []
-	for i in parent2.tour:
-		if i not in center:
-			newstuff.append(i)
-	for el in newstuff[:pos1]:
+	drivers = []
+
+	for i in range(len(parent2.tour)):
+		if parent1.tour[i] not in center:
+			newstuff_tour.append(parent2.tour[i])
+			newstuff_driver.append(parent2.drivers[i])
+	
+	for el in newstuff_tour[:pos1]:
 		tour.append(el)
 	for el in parent1.tour[pos1:pos2]:
 		tour.append(el)
-	for el in newstuff[pos2:]:
+	for el in newstuff_tour[pos1:]:
 		tour.append(el)
+
+	for el in newstuff_driver[:pos1]:
+		drivers.append(el)
+	for el in parent1.drivers[pos1:pos2]:
+		drivers.append(el)
+	for el in newstuff_driver[pos1:]:
+		drivers.append(el)
+
 	offspring.tour = tour
+	offspring.drivers = drivers
 
 	return offspring
 
@@ -92,9 +106,12 @@ def generate_offspring(parent1, parent2, pos1, pos2):
 def order_2p_crossover(individuals, crossover_prob):
 	children = []
 	#go through all the parent1parent2 combinations and cross them over with a certain probability
-	for parent1 in individuals:
-		for parent2 in individuals:
-			if parent1 != parent2:
+	for pp1 in range(len(individuals)):
+		for pp2 in range(len(individuals)):
+			if pp1 != pp2:
+				parent1 = individuals[pp1] 
+				parent2 = individuals[pp2]
+
 				if random.random() < crossover_prob:
 					#with probability
 					#randomize the two points
