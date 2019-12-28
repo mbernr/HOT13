@@ -7,7 +7,7 @@ import math
 import sys
 import random
 
-def ga(inst, num_generations=100, pop_size=300, using_grasp=False, alpha=1.0, selec_ratio=0.5, tour_size=3, repl_ratio=1.0, crossover_prob=0.7, mutation_prob=0.3, hof_size=3, max_time=math.inf):
+def ga(inst, num_generations=100, pop_size=300, using_grasp=False, grasp_iterations=10, alpha=1.0, selec_ratio=0.5, tour_size=3, repl_ratio=1.0, crossover_prob=0.7, mutation_prob=0.3, hof_size=3, max_time=math.inf):
 	'''
 		inst: instance
 		num_generations = number of generations the algorithm performs
@@ -23,7 +23,7 @@ def ga(inst, num_generations=100, pop_size=300, using_grasp=False, alpha=1.0, se
 		max_time: max time
 	'''
 
-	pop = initialize_pop(inst, pop_size, using_grasp, alpha)
+	pop = initialize_pop(inst, pop_size, using_grasp, alpha, grasp_iterations)
 	hof = sorted(pop, key=lambda sol: sol.obj())[:hof_size]
 
 	for _ in range(num_generations):
@@ -35,12 +35,12 @@ def ga(inst, num_generations=100, pop_size=300, using_grasp=False, alpha=1.0, se
 	return hof
 
 
-def initialize_pop(inst, pop_size, using_grasp, alpha):
+def initialize_pop(inst, pop_size, using_grasp, alpha, grasp_iterations):
 	pop = []
 	ns = TourReversal() # since we used this ns for GRASP in the first assignment
 	for _ in range(pop_size):
 		if using_grasp:
-			pop.append(grasp(inst, ns, alpha, max_iterations=10))
+			pop.append(grasp(inst, ns, alpha, max_iterations=grasp_iterations))
 		else:
 			pop.append(construct_random_greedy(inst, alpha))
 	return pop
