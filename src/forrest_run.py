@@ -14,12 +14,17 @@ import time
 
 #-----------------PARAMETERS PART------------------
 GENNR = 10
-POPSIZE = 100
-HOFSIZE = 10
+POPSIZE = 100 #<----
+TOURSIZE = 3 #<----
+SELECR=0.5, 
+CROSSOVERP=0.7  #<---- 
+MUTATIONP=0.3  #<----
+HOFSIZE = 3
 MAXIT = 10
 TIMELIMIT = 10
-REPLRATIO = 1.0
-ALPHA = 1.0
+REPLRATIO = 1.0  #<----
+ALPHAGRASP = 0.75 #<----
+ALPHAVND = 1.0 #<----
 GRASPIT = 10
 #------------------------------------------------
 
@@ -91,10 +96,14 @@ for inst_name in inst_list:
 	hof = ga(inst, num_generations=GENNR, 
 	   pop_size=POPSIZE, 
 	   hof_size=HOFSIZE,
+	   tour_size=TOURSIZE,
 	   repl_ratio=REPLRATIO, 
+	   selection_ratio=SELECR,
+	   crossover_prob=CROSSOVERP,
+	   mutation_prob=MUTATIONP,
 	   using_grasp=True,
 	   grasp_iterations=GRASPIT,
-	   alpha=ALPHA)
+	   alpha=ALPHAGRASP)
 
 	print(hof[0])
 
@@ -112,9 +121,13 @@ for inst_name in inst_list:
 	hof = ga(inst, num_generations=GENNR, 
 	   pop_size=POPSIZE, 
 	   hof_size=HOFSIZE,
+	   tour_size=TOURSIZE,
 	   repl_ratio=REPLRATIO, 
+	   selection_ratio=SELECR,
+	   crossover_prob=CROSSOVERP,
+	   mutation_prob=MUTATIONP,
 	   using_grasp=False,
-	   alpha=ALPHA)
+	   alpha=ALPHAVND)
 
 	best_pos = -1
 	best_rmse = math.inf
