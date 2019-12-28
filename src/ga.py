@@ -63,16 +63,16 @@ def select(pop, selec_ratio, tour_size):
 		chosen_solutions.append(pop[i])
 	return chosen_solutions
 
-#def randomize_2_pos(max):
-#TODO
-#	pos1 = random.randrange(0, len(parent1.tour), 1)
-#	pos2 = random.randrange(0, len(parent1.tour), 1)
-#	while pos2==pos1:
-#		pos2 = random.randrange(0, len(parent1.tour), 1)
-#	if pos1 > pos2:
-#		pos1, pos2 = pos2, pos1
-#
-#	return pos1, pos2
+def randomize_2_pos(max):
+	#generates two positions in a 0-max range and makes sure they are different and pos1 is smaller then pos2
+	pos1 = random.randrange(0, max, 1)
+	pos2 = random.randrange(0, max, 1)
+	while pos2==pos1:
+		pos2 = random.randrange(0, max, 1)
+	if pos1 > pos2:
+		pos1, pos2 = pos2, pos1
+
+	return pos1, pos2
 
 def generate_offspring(parent1, parent2, pos1, pos2):
 	'''
@@ -127,15 +127,8 @@ def order_2p_crossover(individuals, crossover_prob):
 			if random.random() < crossover_prob:
 				#with probability
 				#randomize the two points
-				#check they are not the same (otw its lame)
-				#if needed swap them so pos1 < pos2
-				pos1 = random.randrange(0, len(parent1.tour), 1)
-				pos2 = random.randrange(0, len(parent1.tour), 1)
-				while pos2==pos1:
-					pos2 = random.randrange(0, len(parent1.tour), 1)
-				if pos1 > pos2:
-					pos1, pos2 = pos2, pos1
-
+				pos1, pos2 = randomize_2_pos(len(parent1.tour))
+				
 				#create offspring1 parent1->parent2
 				offspring1 = generate_offspring(parent1, parent2, pos1, pos2)
 				children.append(offspring1)
@@ -169,12 +162,10 @@ def mutate(children, mutation_prob):
 				driver = random.randrange(0, child.inst.k, 1)
 				driver_flip(child, pos, driver)
 			else:
-				p1 = random.randrange(0, len(child.drivers), 1)
-				p2 = random.randrange(0, len(child.drivers), 1)
-				while p1 == p2 or abs(p1-p2) == (child.inst.n-1):								
-					p2 = random.randrange(0, len(child.drivers), 1)
-				p1, p2 = min(p1, p2), max(p1, p2)
-
+				p1, p2 = randomize_2_pos(len(child.drivers))
+				while abs(p1-p2) == (child.inst.n-1):		
+					p1, p2 = randomize_2_pos(len(child.drivers))						
+					
 				tour_swap(individual, p1, p2)
 
 	return children
