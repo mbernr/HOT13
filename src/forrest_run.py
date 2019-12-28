@@ -53,7 +53,7 @@ def store_results(sol_file_path, res_file_path, inst_name, sol, running_time, av
 
 print("starting..")
 
-#webbrowser.open('FORREST GUMP VIDEO')
+webbrowser.open('https://www.youtube.com/watch?v=pyCGEHYvgsU')
 
 inst_list = [
 	'0020_k1.txt', '0020_k2.txt',
