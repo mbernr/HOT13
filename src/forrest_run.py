@@ -13,20 +13,21 @@ from ga import *
 import time
 
 #-----------------PARAMETERS TO TEST------------------
-GENNR = 10
+GENNR = 1000
 POPSIZE = 100
 TOURSIZE = 3
 CROSSOVERP=0.7  
+SELECR=0.5 
 MUTATIONP=0.3 
-REPLRATIO = 1.0 
 ALPHAGRASP = 0.75
 ALPHAVND = 1.0
 #----------------------------------------------
-SELECR=0.5 
+REPLRATIO = 0.8 
 HOFSIZE = 3
-MAXIT = 10
-TIMELIMIT = 10
+
 GRASPIT = 10
+MAXITVND = 100
+TIMELIMITVND = 60*3
 #------------------------------------------------
 
 
@@ -68,8 +69,8 @@ inst_list = [
 	#'berlin52_k1_1.txt', 'berlin52_k1_2.txt',
 	#'berlin52_k2_1.txt', 'berlin52_k2_2.txt',
 	#'bier127_k3_1.txt', 'bier127_k3_2.txt',
-	#'pr152_k2_1.txt', 
-	#'pr152_k4_1.txt', 'pr152_k4_2.txt'
+	#'pr152_k2_2.txt', 
+	#'pr439_k4_1.txt', 'pr439_k4_2.txt'
 ]
 
 files = glob.glob('results2/*')
@@ -135,7 +136,7 @@ for inst_name in inst_list:
 
 	for i in range(len(hof)):	
 		print(i)
-		vnd(hof[i], [TourReversal(),  DriverOneExchange(), OneBlockMove()], max_iterations = 100,  max_time=10, using_delta_eval=True)	
+		vnd(hof[i], [TourReversal(),  DriverOneExchange(), OneBlockMove()], max_iterations = MAXITVND,  max_time=TIMELIMITVND, using_delta_eval=True)	
 		if hof[i].rmse() < best_rmse:
 			best_pos = i
 			best_rmse = hof[i].rmse()
