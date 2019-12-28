@@ -11,8 +11,8 @@ class TourReversal:
 			return
 		else:
 			p1, p2 = min(p1, p2), max(p1, p2)
-			sol.tour = self.reverse_array_section(sol.tour, p1,p2)
-			sol.drivers = self.reverse_array_section(sol.drivers, p1, p2-1)
+			sol.tour = self.reverse_array_section(sol.tour, p1,p2).astype(np.int16)
+			sol.drivers = self.reverse_array_section(sol.drivers, p1, p2-1).astype(np.int8)
 			sol.calc_objective()
 
 	def move(self, sol, step_function="best_improvement", using_delta_eval=False):
