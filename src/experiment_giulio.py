@@ -17,11 +17,45 @@ inst = HotInstance("instances/0010_k2.txt")
 # ns = OneBlockMove()
 
 
+print("ga and then plugging the 10 best in vnd, then returning best of the resulting")
+timevnd = time.process_time()
+
+hof = ga(inst, num_generations=10, 
+   pop_size=100, 
+   hof_size=10,
+   repl_ratio=1.0, 
+   using_grasp=False,
+   alpha=1.0)
+
+#vnd(hof[0], [TourReversal(),  DriverOneExchange(), OneBlockMove()], max_iterations = 100,  max_time=20, using_delta_eval=True)
+
+best_pos = -1
+best_rmse = 123123123123123123123
+
+for i in range(len(hof)):	
+	print(i)
+	vnd(hof[i], [TourReversal(),  DriverOneExchange(), OneBlockMove()], max_iterations = 100,  max_time=10, using_delta_eval=True)	
+	if hof[i].rmse() < best_rmse:
+		best_pos = i
+		best_rmse = hof[i].rmse()
+
+print(hof[best_pos])
+
+
+
 
 # test ga
+'''
+hof = ga(inst, num_generations=10,
+   pop_size=100, 
+   hof_size=10,
+   repl_ratio=1.0, 
+   using_grasp=False,
+   alpha=1.0)
 
-ga(inst, num_generations=10, pop_size=10)
-
+for sol in hof:
+	print(round(sol.rmse(),4))
+'''
 
 
 '''
