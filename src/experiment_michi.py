@@ -20,8 +20,16 @@ inst = HotInstance("instances/0010_k2.txt")
 
 # test ga
 
-ga(inst, num_generations=1, pop_size=10, repl_ratio=0.66)
+hof = ga(inst, 
+   num_generations=1000, 
+   pop_size=100, 
+   hof_size=10,
+   repl_ratio=1.0, 
+   using_grasp=False,
+   alpha=1.0)
 
+for sol in hof:
+	print(round(sol.rmse(),4))
 
 
 '''
@@ -155,4 +163,4 @@ for ns in [TourReversal(), OneBlockMove(), DriverOneExchange()]:
 
 
 
-print("runtime: {}".format(time.time()-start_time))
+print("runtime: {}s".format(round(time.time()-start_time,4)))

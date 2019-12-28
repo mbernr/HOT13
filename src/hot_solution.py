@@ -24,8 +24,6 @@ class HotSolution(Solution):
 		else:
 			self.drivers = np.zeros(self.inst.n, dtype=np.int8)
 
-		self.calc_objective()
-
 
 	def copy(self):
 		copied_tour = np.copy(self.tour)
@@ -80,10 +78,12 @@ class HotSolution(Solution):
 		pass
 
 	def __eq__(self, other):
-		if self.inst == other.inst and (self.tour == other.tour).all() and (self.drivers == other.drivers).all():
-			return True
-		else:
-			return False
+		if self.inst == other.inst:
+			for i in range(self.inst.n):
+				if self.tour[i] != other.tour[i] or self.drivers[i] != other.drivers[i]:
+					return False
+				return True
+		return False
 
 	def check(self):
 
