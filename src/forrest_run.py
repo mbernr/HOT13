@@ -12,19 +12,20 @@ from grasp import *
 from ga import *
 import time
 
-#-----------------PARAMETERS PART------------------
+#-----------------PARAMETERS TO TEST------------------
 GENNR = 10
-POPSIZE = 100 #<----
-TOURSIZE = 3 #<----
-SELECR=0.5, 
-CROSSOVERP=0.7  #<---- 
-MUTATIONP=0.3  #<----
+POPSIZE = 100
+TOURSIZE = 3
+CROSSOVERP=0.7  
+MUTATIONP=0.3 
+REPLRATIO = 1.0 
+ALPHAGRASP = 0.75
+ALPHAVND = 1.0
+#----------------------------------------------
+SELECR=0.5 
 HOFSIZE = 3
 MAXIT = 10
 TIMELIMIT = 10
-REPLRATIO = 1.0  #<----
-ALPHAGRASP = 0.75 #<----
-ALPHAVND = 1.0 #<----
 GRASPIT = 10
 #------------------------------------------------
 
