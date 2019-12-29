@@ -84,7 +84,6 @@ empty_folder("solutions2/ga_vnd/*")
 print("Folders have been cleaned. Forrest is now ready to run")
 
 start_time = time.time()
-inst = HotInstance("instances/0010_k2.txt")
 
 
 for inst_name in inst_list:
@@ -100,7 +99,7 @@ for inst_name in inst_list:
 	   hof_size=HOFSIZE,
 	   tour_size=TOURSIZE,
 	   repl_ratio=REPLRATIO, 
-	   selection_ratio=SELECR,
+	   selec_ratio=SELECR,
 	   crossover_prob=CROSSOVERP,
 	   mutation_prob=MUTATIONP,
 	   using_grasp=True,
@@ -125,7 +124,7 @@ for inst_name in inst_list:
 	   hof_size=HOFSIZE,
 	   tour_size=TOURSIZE,
 	   repl_ratio=REPLRATIO, 
-	   selection_ratio=SELECR,
+	   selec_ratio=SELECR,
 	   crossover_prob=CROSSOVERP,
 	   mutation_prob=MUTATIONP,
 	   using_grasp=False,

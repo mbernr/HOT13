@@ -32,7 +32,7 @@ def ga(inst, num_generations=100, pop_size=300, using_grasp=False, grasp_iterati
 		children = order_2p_crossover(chosen_ones, crossover_prob)
 		children = mutate(children, mutation_prob)
 		pop, hof = replace(pop, children, repl_ratio, hof)
-		if time.process_time() - starting_time < max_time:
+		if time.process_time() - starting_time > max_time:
 			print("timeout reached")
 			return hof
 
