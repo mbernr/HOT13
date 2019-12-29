@@ -15,12 +15,12 @@ from ga import *
 import time
 
 #-----------------PARAMETERS TO TEST------------------ <---- update them here once you run them
-GENNR = 200
-POPSIZE = 100
-TOURSIZE = 5
-SELECR=0.25
-CROSSOVERP=0.5
-MUTATIONP==0.5
+GENNR = 200 # this, or 500, or 1000 with time limit
+POPSIZE = 100 # this, or 200
+TOURSIZE = 5 # actually doesn't really make a performance difference, 5 is fine
+SELECR=0.25 # sweet spot between run time and objective
+CROSSOVERP=0.3 # this combination of probabilities is the fastest,
+MUTATIONP==0.7 # with the best objective
 
 #----------------------------------------------
 REPLRATIO = 0.8 
