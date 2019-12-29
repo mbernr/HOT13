@@ -6,6 +6,7 @@ from neighbourhood_structures import *
 import math
 import sys
 import random
+import time
 
 def ga(inst, num_generations=100, pop_size=300, using_grasp=False, grasp_iterations=10, alpha=1.0, selec_ratio=0.5, tour_size=3, repl_ratio=1.0, crossover_prob=0.7, mutation_prob=0.3, hof_size=3, max_time=math.inf):
 	'''
@@ -22,7 +23,7 @@ def ga(inst, num_generations=100, pop_size=300, using_grasp=False, grasp_iterati
 		hof_size: size of the hall of fame
 		max_time: max time
 	'''
-
+	starting_time = time.process_time()
 	pop = initialize_pop(inst, pop_size, using_grasp, alpha, grasp_iterations)
 	hof = sorted(pop, key=lambda sol: sol.obj())[:hof_size]
 
@@ -31,6 +32,9 @@ def ga(inst, num_generations=100, pop_size=300, using_grasp=False, grasp_iterati
 		children = order_2p_crossover(chosen_ones, crossover_prob)
 		children = mutate(children, mutation_prob)
 		pop, hof = replace(pop, children, repl_ratio, hof)
+		if time.process_time() - starting_time < max_time:
+			print("timeout reached")
+			return hof
 
 	return hof
 
