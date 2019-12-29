@@ -15,12 +15,12 @@ from ga import *
 import time
 
 #-----------------PARAMETERS TO TEST------------------ <---- update them here once you run them
-GENNR = 1000
-POPSIZE = 50
+GENNR = 200
+POPSIZE = 100
 TOURSIZE = 5
-CROSSOVERP=0.5 
-SELECR=0.5 
-MUTATIONP=0.5
+SELECR=0.25
+CROSSOVERP=0.5
+MUTATIONP==0.5
 
 #----------------------------------------------
 REPLRATIO = 0.8 
@@ -34,7 +34,7 @@ TIMELIMITVND = 60*3
 inst_list = [
 	'0020_k2.txt',
 	'berlin52_k1_2.txt',
-	'pr439_k4_2.txt'
+	'bier127_k3_1.txt',
 ]
 
 
@@ -43,35 +43,37 @@ for inst_name in inst_list:
 	inst = HotInstance(inst_path)
 
 	print(inst_path)
-	for test_param in [10, 100, 1000]: #<------- change this to modify the parameter values
+	for test_param in [(0.3,0.7),(0.5,0.5),(0.7,0.3)] : #<------- change this to modify the parameter values
 		starting_time = time.process_time()
 		hofscores = []
+		num_infeas_solutions = 0
 		for _ in range(10):
-			hof = ga(inst, num_generations=test_param, #<----- reset the correct parameter name for the already tested parameters
+			hof = ga(inst, 
+				   num_generations=GENNR, #<----- reset the correct parameter name for the already tested parameters
 				   pop_size=POPSIZE, 
 				   hof_size=HOFSIZE,
 				   tour_size=TOURSIZE,
 				   repl_ratio=REPLRATIO, 
 				   selec_ratio=SELECR,
-				   crossover_prob=CROSSOVERP,
-				   mutation_prob=MUTATIONP,
+				   crossover_prob=test_param[0],
+				   mutation_prob=test_param[1],
 				   using_grasp=False
 				   )
 
 			for sol in hof:
 				hofscores.append(round(sol.rmse(),4))
+				if sol.is_infeasible():
+					num_infeas_solutions += 1
 
-		hofscores = np.sort(np.array(hofscores))
-		print(hofscores)
 		mean = round(np.mean(hofscores),4)
 		std = round(np.std(hofscores),4)
 		running_time = round(time.process_time() - starting_time, 3)
 
-		toprint = str(test_param) + " | best: " + str(hofscores[0]) + ", mean: " + str(mean) + ", std: " + str(std) + " | " + str(running_time) + "s"
+		toprint = str(test_param) + " | best: " + str(hofscores[0]) + ", mean: " + str(mean) + ", std: " + str(std) + ", infeas: " + str(num_infeas_solutions)+"/"+str(len(hofscores)) + " | " + str(running_time) + "s"
 
-		file = open("ptesting/num_generation_testing.txt", "w")  #<--------change this name to be meaningful to the parameter we are testing
-		file.write(str(toprint))
-		file.close()
+		# file = open("ptesting/num_generation_testing.txt", "w")  #<-------- I uncommented this, cause it was not working properly
+		# file.write(str(toprint))
+		# file.close()
 		print(toprint)
 
 	print()
