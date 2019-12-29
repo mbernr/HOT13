@@ -16,11 +16,11 @@ import time
 
 #-----------------PARAMETERS TO TEST------------------ <---- update them here once you run them
 GENNR = 1000
-POPSIZE = 100
-TOURSIZE = 3
-CROSSOVERP=0.7  
+POPSIZE = 50
+TOURSIZE = 5
+CROSSOVERP=0.5 
 SELECR=0.5 
-MUTATIONP=0.3 
+MUTATIONP=0.5
 
 #----------------------------------------------
 REPLRATIO = 0.8 
@@ -61,12 +61,13 @@ for inst_name in inst_list:
 			for sol in hof:
 				hofscores.append(round(sol.rmse(),4))
 
-		hofscores = np.array(hofscores)
+		hofscores = np.sort(np.array(hofscores))
+		print(hofscores)
 		mean = round(np.mean(hofscores),4)
 		std = round(np.std(hofscores),4)
 		running_time = round(time.process_time() - starting_time, 3)
 
-		toprint = str(test_param) + "| best: " + str(hofscores[0]) + " mean: " + str(mean) + "std: " + str(std) + " | " + str(running_time) + "s"
+		toprint = str(test_param) + " | best: " + str(hofscores[0]) + ", mean: " + str(mean) + ", std: " + str(std) + " | " + str(running_time) + "s"
 
 		file = open("ptesting/num_generation_testing.txt", "w")  #<--------change this name to be meaningful to the parameter we are testing
 		file.write(str(toprint))
