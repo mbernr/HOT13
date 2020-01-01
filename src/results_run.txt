@@ -1,0 +1,194 @@
+0020_k1.txt
+time:  0.05 min
+time:  0.09 min
+time:  0.14 min
+time:  0.18 min
+time:  0.23 min
+time:  0.27 min
+time:  0.32 min
+time:  0.36 min
+time:  0.41 min
+time:  0.46 min
+best: 430.0, mean: 10437.6, std: 29788.3563, infeas: 0/30 | 27.291s
+
+0020_k2.txt
+time:  0.05 min
+time:  0.09 min
+time:  0.14 min
+time:  0.19 min
+time:  0.23 min
+time:  0.28 min
+time:  0.33 min
+time:  0.38 min
+time:  0.43 min
+time:  0.47 min
+best: 1201171.9565, mean: 1498884.9456, std: 216558.3037, infeas: 0/30 | 28.407s
+
+0100_k1.txt
+time:  0.76 min
+time:  1.54 min
+time:  2.28 min
+time:  3.01 min
+time:  3.75 min
+time:  4.48 min
+time:  5.25 min
+time:  5.97 min
+time:  6.69 min
+time:  7.4 min
+best: 2370.0, mean: 701363823.3667, std: 521402452.946, infeas: 26/30 | 443.48s
+
+0100_k2.txt
+time:  0.65 min
+time:  1.3 min
+time:  1.95 min
+time:  2.63 min
+time:  3.23 min
+time:  3.85 min
+time:  4.5 min
+time:  5.18 min
+time:  5.87 min
+time:  6.5 min
+best: 9050368.5, mean: 142843220.6549, std: 165647373.4786, infeas: 12/30 | 389.734s
+
+a280_k3_1.txt
+time:  5.83 min
+time:  11.68 min
+time:  17.6 min
+time:  23.46 min
+time:  29.24 min
+time:  35.04 min
+time:  40.83 min
+time:  46.66 min
+time:  52.48 min
+time:  58.28 min
+best: 1193.2707, mean: 1357.8741, std: 73.883, infeas: 0/30 | 3495.477s
+
+a280_k3_2.txt
+time:  5.87 min
+time:  11.7 min
+time:  17.48 min
+time:  23.28 min
+time:  29.07 min
+time:  34.87 min
+time:  40.69 min
+time:  46.49 min
+time:  52.28 min
+time:  58.09 min
+best: 394.6095, mean: 572.5607, std: 81.8805, infeas: 0/30 | 3483.743s
+
+berlin52_k1_1.txt
+time:  0.19 min
+time:  0.38 min
+time:  0.57 min
+time:  0.76 min
+time:  0.97 min
+time:  1.16 min
+time:  1.35 min
+time:  1.54 min
+time:  1.74 min
+time:  1.93 min
+best: 0.0, mean: 370.9, std: 247.5219, infeas: 0/30 | 115.653s
+
+berlin52_k1_2.txt
+time:  0.12 min
+time:  0.24 min
+time:  0.36 min
+time:  0.48 min
+time:  0.6 min
+time:  0.72 min
+time:  0.84 min
+time:  0.96 min
+time:  1.08 min
+time:  1.2 min
+best: 0.0, mean: 0.0, std: 0.0, infeas: 0/30 | 71.828s
+
+berlin52_k2_1.txt
+time:  0.18 min
+time:  0.34 min
+time:  0.53 min
+time:  0.71 min
+time:  0.9 min
+time:  1.08 min
+time:  1.26 min
+time:  1.46 min
+time:  1.63 min
+time:  1.81 min
+best: 116.5869, mean: 272.0391, std: 113.334, infeas: 0/30 | 108.378s
+
+berlin52_k2_2.txt
+time:  0.11 min
+time:  0.22 min
+time:  0.33 min
+time:  0.44 min
+time:  0.54 min
+time:  0.65 min
+time:  0.77 min
+time:  0.88 min
+time:  1.0 min
+time:  1.11 min
+best: 0.0, mean: 0.3966, std: 0.4195, infeas: 0/30 | 66.282s
+
+bier127_k3_1.txt
+time:  1.31 min
+time:  2.6 min
+time:  3.9 min
+time:  5.2 min
+time:  6.5 min
+time:  7.8 min
+time:  9.1 min
+time:  10.41 min
+time:  11.7 min
+time:  13.0 min
+best: 1937.2893, mean: 3403.0847, std: 976.5342, infeas: 0/30 | 779.481s
+
+bier127_k3_2.txt
+time:  0.62 min
+time:  1.2 min
+time:  1.78 min
+time:  2.4 min
+time:  2.97 min
+time:  3.5 min
+time:  4.09 min
+time:  4.68 min
+time:  5.24 min
+time:  5.82 min
+best: 0.0, mean: 1.9951, std: 1.7377, infeas: 0/30 | 348.957s
+
+pr152_k2_2.txt
+time:  1.15 min
+time:  2.32 min
+time:  3.53 min
+time:  4.75 min
+time:  6.02 min
+time:  7.17 min
+time:  8.34 min
+time:  9.53 min
+time:  10.73 min
+time:  11.95 min
+best: 0.0, mean: 0.5118, std: 0.4705, infeas: 0/30 | 716.631s
+
+pr439_k4_1.txt
+time:  6.94 min
+time:  13.9 min
+time:  20.83 min
+time:  27.8 min
+time:  34.79 min
+time:  41.76 min
+time:  48.7 min
+time:  55.66 min
+time:  62.69 min
+time:  69.71 min
+best: 164956.0987, mean: 177056.7797, std: 6972.1844, infeas: 0/30 | 4181.124s
+
+pr439_k4_2.txt
+time:  6.97 min
+time:  13.93 min
+time:  20.9 min
+time:  27.89 min
+time:  34.86 min
+time:  41.77 min
+time:  48.73 min
+time:  55.72 min
+time:  62.66 min
+time:  69.62 min
+best: 133708.2339, mean: 149009.0763, std: 9168.5155, infeas: 0/30 | 4175.132s
