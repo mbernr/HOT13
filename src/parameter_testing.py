@@ -20,11 +20,13 @@ POPSIZE = 100 # this, or 200
 TOURSIZE = 5 # actually doesn't really make a performance difference, 5 is fine
 SELECR=0.25 # sweet spot between run time and objective
 CROSSOVERP=0.3 # this combination of probabilities is the fastest,
-MUTATIONP==0.7 # with the best objective
+MUTATIONP=0.7 # with the best objective
 
 #----------------------------------------------
 REPLRATIO = 0.8 
 HOFSIZE = 10
+
+TIMELIMITGA=60*10
 
 GRASPIT = 10
 MAXITVND = 100
@@ -32,18 +34,17 @@ TIMELIMITVND = 60*3
 #------------------------------------------------
 
 inst_list = [
-	'0020_k2.txt',
+	#'0020_k2.txt',
 	'berlin52_k1_2.txt',
 	'bier127_k3_1.txt',
 ]
-
 
 for inst_name in inst_list:
 	inst_path = "instances2/" + inst_name
 	inst = HotInstance(inst_path)
 
 	print(inst_path)
-	for test_param in [(0.3,0.7),(0.5,0.5),(0.7,0.3)] : #<------- change this to modify the parameter values
+	for _ in range(10):
 		starting_time = time.process_time()
 		hofscores = []
 		num_infeas_solutions = 0
@@ -55,28 +56,39 @@ for inst_name in inst_list:
 				   tour_size=TOURSIZE,
 				   repl_ratio=REPLRATIO, 
 				   selec_ratio=SELECR,
-				   crossover_prob=test_param[0],
-				   mutation_prob=test_param[1],
-				   using_grasp=False
+				   crossover_prob=CROSSOVERP,
+				   mutation_prob=MUTATIONP,
+				   using_grasp=False,
+				   max_time=TIMELIMITGA
 				   )
+
+			best_pos = -1
+			best_rmse = math.inf
+
+			for i in range(len(hof)):	
+				vnd(hof[i], [TourReversal(),  DriverOneExchange(), OneBlockMove()], max_iterations = MAXITVND,  max_time=TIMELIMITVND, using_delta_eval=True)	
+				if hof[i].rmse() < best_rmse:
+					best_pos = i
+					best_rmse = hof[i].rmse()
 
 			for sol in hof:
 				hofscores.append(round(sol.rmse(),4))
 				if sol.is_infeasible():
 					num_infeas_solutions += 1
 
+		hofscores = np.sort(np.array(hofscores))
 		mean = round(np.mean(hofscores),4)
 		std = round(np.std(hofscores),4)
 		running_time = round(time.process_time() - starting_time, 3)
 
-		toprint = str(test_param) + " | best: " + str(hofscores[0]) + ", mean: " + str(mean) + ", std: " + str(std) + ", infeas: " + str(num_infeas_solutions)+"/"+str(len(hofscores)) + " | " + str(running_time) + "s"
+		toprint = "best: " + str(hofscores[0]) + ", mean: " + str(mean) + ", std: " + str(std) + ", infeas: " + str(num_infeas_solutions)+"/"+str(len(hofscores)) + " | " + str(running_time) + "s"
 
 		# file = open("ptesting/num_generation_testing.txt", "w")  #<-------- I uncommented this, cause it was not working properly
 		# file.write(str(toprint))
 		# file.close()
 		print(toprint)
 
-	print()
+		print()
 
 '''
 TO USE:
