@@ -149,9 +149,18 @@ def driver_flip(individual, pos, driver):
 
 
 def tour_swap(individual, p1, p2):
-	individual.tour = self.reverse_array_section(individual.tour, p1, p2)
-	individual.drivers = self.reverse_array_section(individual.drivers, p1, p2-1)
+	if p1 == p2 or abs(p1-p2) == (individual.inst.n-1):
+		return
+	individual.tour = reverse_array_section(individual.tour, p1, p2).astype(np.int16)
+	individual.drivers = reverse_array_section(individual.drivers, p1, p2-1).astype(np.int8)
 
+def reverse_array_section(array, p1, p2):
+		i = min(p1, p2)
+		j = max(p1, p2)
+		before = array[:i]
+		middle = np.flip(array[i:j+1])
+		after = array[j+1:]
+		return np.concatenate((before, middle, after))
 
 def mutate(children, mutation_prob):
 	# tour swap (e.g. 50% chance)
@@ -160,8 +169,7 @@ def mutate(children, mutation_prob):
 
 	for child in children:
 		if random.random() < mutation_prob:
-			i = random.randrange(1, 2)
-			if i == 1:
+			if random.randrange(2) == 0:
 				pos = random.randrange(0, len(child.drivers), 1)
 				driver = random.randrange(0, child.inst.k, 1)
 				driver_flip(child, pos, driver)
@@ -170,7 +178,7 @@ def mutate(children, mutation_prob):
 				while abs(p1-p2) == (child.inst.n-1):		
 					p1, p2 = randomize_2_pos(len(child.drivers))						
 					
-				tour_swap(individual, p1, p2)
+				tour_swap(child, p1, p2)
 
 	return children
 
