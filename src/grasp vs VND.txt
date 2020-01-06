@@ -1,0 +1,25 @@
+instances2/0020_k2.txt
+naked GA
+best: 1600823.2732, mean: 37242400.354, std: 31219171.5317, infeas: 55/100 | 30.202s
+
+GRASP
+best: 1101250.5016, mean: 1107884.0865, std: 12294.5702, infeas: 0/100 | 594.968s
+
+VND
+best: 1101251.0458, mean: 1491079.3452, std: 230226.4364, infeas: 0/100 | 35.592s
+
+instances2/berlin52_k1_2.txt
+naked GA
+best: 0.0, mean: 36.85, std: 60.6794, infeas: 0/100 | 63.002s
+
+GRASP
+best: 0.0, mean: 0.0, std: 0.0, infeas: 0/100 | 4747.185s
+
+VND
+best: 0.0, mean: 0.0, std: 0.0, infeas: 0/100 | 78.887s
+
+instances2/bier127_k3_1.txt
+naked GA
+best: 74360.7074, mean: 83149.5439, std: 5480.4858, infeas: 0/100 | 146.848s
+
+timeout reached
