@@ -8,7 +8,7 @@ import sys
 import random
 import time
 
-def ga(inst, num_generations=100, pop_size=300, using_grasp=False, grasp_iterations=10, alpha=1.0, selec_ratio=0.5, tour_size=3, repl_ratio=1.0, crossover_prob=0.7, mutation_prob=0.3, hof_size=3, max_time=math.inf):
+def ga(inst, num_generations=100, pop_size=300, using_grasp=False, grasp_iterations=10, alpha=1.0, selec_ratio=0.5, tour_size=3, repl_ratio=1.0, crossover_prob=0.7, mutation_prob=0.3, hof_size=3, max_time=math.inf, return_gen_data=False):
 	'''
 		inst: instance
 		num_generations = number of generations the algorithm performs
@@ -26,18 +26,26 @@ def ga(inst, num_generations=100, pop_size=300, using_grasp=False, grasp_iterati
 	starting_time = time.process_time()
 	pop = initialize_pop(inst, pop_size, using_grasp, alpha, grasp_iterations)
 	hof = sorted(pop, key=lambda sol: sol.obj())[:hof_size]
+	evolution_data = []
+	evolution_data.append(store_generation_data(0, pop))
 
-	for _ in range(num_generations):
+	for it in range(num_generations):
 		chosen_ones = select(pop, selec_ratio, tour_size)
 		children = order_2p_crossover(chosen_ones, crossover_prob)
 		children = mutate(children, mutation_prob)
 		pop, hof = replace(pop, children, repl_ratio, hof)
+
+		evolution_data.append(store_generation_data(it+1, pop))    
+
 		if time.process_time() - starting_time > max_time:
 			print("timeout reached")
+			if return_gen_data==True:
+				return hof, evolution_data
 			return hof
 
+	if return_gen_data==True:
+		return hof, evolution_data
 	return hof
-
 
 def initialize_pop(inst, pop_size, using_grasp, alpha, grasp_iterations):
 	pop = []
@@ -49,6 +57,14 @@ def initialize_pop(inst, pop_size, using_grasp, alpha, grasp_iterations):
 			pop.append(construct_random_greedy(inst, alpha))
 	return pop
 
+def store_generation_data(iteration, pop):
+	obj = np.array([sol.rmse() for sol in pop])
+	np.sort(obj)
+	mean = round(np.mean(obj),3)
+	std = round(np.std(obj),3)
+	best = round(min(obj),3)
+	stuff = [iteration, best, mean, std]
+	return stuff
 
 def select(pop, selec_ratio, tour_size):
 	chosen = set()

@@ -74,16 +74,16 @@ inst_list = [
 	'pr439_k4_1.txt', 'pr439_k4_2.txt'
 ]
 
-files = glob.glob('results2/*')
-for f in files:
-	file = open(f, "w")
-	file.close()
+#files = glob.glob('results2/*')
+#for f in files:
+#	file = open(f, "w")
+#	file.close()
 
 empty_folder("solutions2/ga_grasp/*")
-empty_folder("solutions2/ga_vnd/*")
+#empty_folder("solutions2/ga_vnd/*")
 
 print("Folders have been cleaned. Forrest is now ready to run")
-
+print("naked GA")
 
 
 for inst_name in inst_list:
@@ -137,15 +137,15 @@ for inst_name in inst_list:
 		best_pos = -1
 		best_rmse = math.inf
 
-		for i in range(len(hof)):	
-			vnd(hof[i], [TourReversal(),  DriverOneExchange(), OneBlockMove()], max_iterations = MAXITVND,  max_time=TIMELIMITVND, using_delta_eval=True)	
-			if hof[i].rmse() < best_rmse:
-				best_pos = i
-				best_rmse = hof[i].rmse()
+		#for i in range(len(hof)):	
+		#	vnd(hof[i], [TourReversal(),  DriverOneExchange(), OneBlockMove()], max_iterations = MAXITVND,  max_time=TIMELIMITVND, using_delta_eval=True)	
+		#	if hof[i].rmse() < best_rmse:
+		#		best_pos = i
+		#		best_rmse = hof[i].rmse()
 
 
-		sol_file_path = "solutions2/ga_vnd/"
-		res_file_path = "results2/ga_vnd.txt"
+		sol_file_path = "solutions2/naked_ga/"
+		res_file_path = "results2/naked_ga.txt"
 		running_time = time.process_time() - timevnd
 
 		store_results(sol_file_path, res_file_path, inst_name, hof[best_pos], running_time)
