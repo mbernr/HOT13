@@ -64,14 +64,17 @@ print("starting..")
 #webbrowser.open('https://www.youtube.com/watch?v=pyCGEHYvgsU')
 
 inst_list = [
-	'0020_k1.txt', '0020_k2.txt',
-	'0100_k1.txt', '0100_k2.txt',
-	'a280_k3_1.txt', 'a280_k3_2.txt',
-	'berlin52_k1_1.txt', 'berlin52_k1_2.txt',
-	'berlin52_k2_1.txt', 'berlin52_k2_2.txt',
-	'bier127_k3_1.txt', 'bier127_k3_2.txt',
-	'pr152_k2_2.txt', 
-	'pr439_k4_1.txt', 'pr439_k4_2.txt'
+	#'0020_k1.txt', 
+	'0020_k2.txt',
+	#'0100_k1.txt', '0100_k2.txt',
+	#'a280_k3_1.txt', 'a280_k3_2.txt',
+	#'berlin52_k1_1.txt', 'berlin52_k1_2.txt',
+	'berlin52_k2_1.txt', 
+	#'berlin52_k2_2.txt',
+	'bier127_k3_1.txt', 
+	#'bier127_k3_2.txt',
+	#'pr152_k2_2.txt', 
+	#'pr439_k4_1.txt', 'pr439_k4_2.txt'
 ]
 
 #files = glob.glob('results2/*')
@@ -83,7 +86,7 @@ empty_folder("solutions2/ga_grasp/*")
 #empty_folder("solutions2/ga_vnd/*")
 
 print("Folders have been cleaned. Forrest is now ready to run")
-print("naked GA")
+
 
 
 for inst_name in inst_list:
@@ -92,36 +95,10 @@ for inst_name in inst_list:
 	inst = HotInstance(inst_path)
 	print(inst_name)
 #----------------GA using grasp to generate first generation, returning best result-------------------------
-	
-#	timegrasp = time.process_time()
-#
-#	hof = ga(inst, num_generations=GENNR, 
-#	   pop_size=POPSIZE, 
-#	   hof_size=HOFSIZE,
-#	   tour_size=TOURSIZE,
-#	   repl_ratio=REPLRATIO, 
-#	   selec_ratio=SELECR,
-#	   crossover_prob=CROSSOVERP,
-#	   mutation_prob=MUTATIONP,
-#	   using_grasp=True,
-#	   grasp_iterations=GRASPIT,
-#	   alpha=ALPHAGRASP,
-#	   max_time=TIMELIMIT)
-#
-#	
-#	sol_file_path = "solutions2/ga_grasp/"
-#	res_file_path = "results2/ga_grasp.txt"
-#	running_time = time.process_time() - timegrasp
-#
-#	store_results(sol_file_path, res_file_path, inst_name, hof[0], running_time)
-
-
-#-------------ga and then plugging the 10 best in vnd, then returning best of the resulting------------------ 
-	timevnd = time.process_time()
 	hofscores = []
 	num_infeas_solutions = 0
-	
-	for _ in range(10):	
+	for _ in range(10): 
+		timegrasp = time.process_time()
 		hof = ga(inst, num_generations=GENNR, 
 		   pop_size=POPSIZE, 
 		   hof_size=HOFSIZE,
@@ -130,25 +107,20 @@ for inst_name in inst_list:
 		   selec_ratio=SELECR,
 		   crossover_prob=CROSSOVERP,
 		   mutation_prob=MUTATIONP,
-		   using_grasp=False,
-		   alpha=ALPHAVND,
+		   using_grasp=True,
+		   grasp_iterations=GRASPIT,
+		   alpha=ALPHAGRASP,
 		   max_time=TIMELIMIT)
+
 
 		best_pos = -1
 		best_rmse = math.inf
+		
+		sol_file_path = "solutions2/ga_grasp/"
+		res_file_path = "results2/ga_grasp.txt"
+		running_time = time.process_time() - timegrasp
 
-		#for i in range(len(hof)):	
-		#	vnd(hof[i], [TourReversal(),  DriverOneExchange(), OneBlockMove()], max_iterations = MAXITVND,  max_time=TIMELIMITVND, using_delta_eval=True)	
-		#	if hof[i].rmse() < best_rmse:
-		#		best_pos = i
-		#		best_rmse = hof[i].rmse()
-
-
-		sol_file_path = "solutions2/naked_ga/"
-		res_file_path = "results2/naked_ga.txt"
-		running_time = time.process_time() - timevnd
-
-		store_results(sol_file_path, res_file_path, inst_name, hof[best_pos], running_time)
+		store_results(sol_file_path, res_file_path, inst_name, hof[0], running_time)
 
 		print("time: ", round((time.time() - start_time)/60, 2), "min")
 
@@ -167,5 +139,58 @@ for inst_name in inst_list:
 
 	print(toprint)
 	print()
+
+
+#-------------ga and then plugging the 10 best in vnd, then returning best of the resulting------------------ 
+#	timevnd = time.process_time()
+#	hofscores = []
+#	num_infeas_solutions = 0
+#	
+#	for _ in range(10):	
+#		hof = ga(inst, num_generations=GENNR, 
+#		   pop_size=POPSIZE, 
+#		   hof_size=HOFSIZE,
+#		   tour_size=TOURSIZE,
+#		   repl_ratio=REPLRATIO, 
+#		   selec_ratio=SELECR,
+#		   crossover_prob=CROSSOVERP,
+#		   mutation_prob=MUTATIONP,
+#		   using_grasp=False,
+#		   alpha=ALPHAVND,
+#		   max_time=TIMELIMIT)
+#
+#		best_pos = -1
+#		best_rmse = math.inf
+#
+#		for i in range(len(hof)):	
+#			vnd(hof[i], [TourReversal(),  DriverOneExchange(), OneBlockMove()], max_iterations = MAXITVND,  max_time=TIMELIMITVND, using_delta_eval=True)	
+#			if hof[i].rmse() < best_rmse:
+#				best_pos = i
+#				best_rmse = hof[i].rmse()
+#
+#
+#		sol_file_path = "solutions2/naked_ga/"
+#		res_file_path = "results2/naked_ga.txt"
+#		running_time = time.process_time() - timevnd
+#
+#		store_results(sol_file_path, res_file_path, inst_name, hof[best_pos], running_time)
+#
+#		print("time: ", round((time.time() - start_time)/60, 2), "min")
+#
+#		for sol in hof:
+#			hofscores.append(round(sol.rmse(),4))
+#			if sol.is_infeasible():
+#				num_infeas_solutions += 1
+#
+#	hofscores = np.sort(np.array(hofscores))
+#	
+#	mean = round(np.mean(hofscores),4)
+#	std = round(np.std(hofscores),4)
+#	running_time = round(time.process_time() - timevnd, 3)
+#
+#	toprint = "best: " + str(hofscores[0]) + ", mean: " + str(mean) + ", std: " + str(std) + ", infeas: " + str(num_infeas_solutions)+"/"+str(len(hofscores)) + " | " + str(running_time) + "s"
+#
+#	print(toprint)
+#	print()
 
 print("saul goodman")
