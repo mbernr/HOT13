@@ -24,9 +24,9 @@ HOFSIZE = 3
 TIMELIMIT = 60*10
 
 
-path = "instances2/0020_k2.txt"
+#path = "instances2/0020_k2.txt"
 #path = "instances2/berlin52_k2_1.txt"
-#path = "instances2/bier127_k3_1.txt"
+path = "instances2/bier127_k3_1.txt"
 inst = HotInstance(path)
 
 
@@ -74,6 +74,7 @@ plt.ylabel('Score')
 #plt.plot(iteration_nr, std_low)
 #plt.plot(iteration_nr, std_up)
 plt.fill_between(iteration_nr, std_low, std_up, alpha=.2)
+plt.legend()
 plt.show()
 
 

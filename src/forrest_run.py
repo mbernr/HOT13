@@ -96,6 +96,7 @@ for inst_name in inst_list:
 	print(inst_name)
 #----------------GA using grasp to generate first generation, returning best result-------------------------
 	hofscores = []
+	timegrasp = time.process_time()
 	num_infeas_solutions = 0
 	for _ in range(10): 
 		timegrasp = time.process_time()
@@ -133,7 +134,7 @@ for inst_name in inst_list:
 	
 	mean = round(np.mean(hofscores),4)
 	std = round(np.std(hofscores),4)
-	running_time = round(time.process_time() - timevnd, 3)
+	running_time = round(time.process_time() - timegrasp, 3)
 
 	toprint = "best: " + str(hofscores[0]) + ", mean: " + str(mean) + ", std: " + str(std) + ", infeas: " + str(num_infeas_solutions)+"/"+str(len(hofscores)) + " | " + str(running_time) + "s"
 
